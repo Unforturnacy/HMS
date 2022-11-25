@@ -5,6 +5,13 @@ import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+
 import javax.swing.JPanel;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -23,12 +30,42 @@ public class patientEntry{
     private JPanel loginPanel;
     private JTextField user;
     private JTextField pass;
-    private JButton login;
+    private JFrame frame;
+    private patientEntry login;
+    static Point mouseDownCompCoords;
     public patientEntry()
     {
+        login = this;
         final int dimx = 220;
-        JFrame frame = new JFrame();
+        frame = new JFrame();
+        frame.addMouseListener(new MouseListener(){
+            public void mouseReleased(MouseEvent e) {
+            mouseDownCompCoords = null;
+            }
+            public void mousePressed(MouseEvent e) {
+            mouseDownCompCoords = e.getPoint();
+            }
+            public void mouseExited(MouseEvent e) {
+            }
+            public void mouseEntered(MouseEvent e) {
+            }
+            public void mouseClicked(MouseEvent e) {
+            }
+        });
+        
+        frame.addMouseMotionListener(new MouseMotionListener(){
+            public void mouseMoved(MouseEvent e) {
+            }
+                
+            public void mouseDragged(MouseEvent e) {
+            Point currCoords = e.getLocationOnScreen();
+            frame.setLocation(currCoords.x - mouseDownCompCoords.x, currCoords.y - mouseDownCompCoords.y);
+            }
+        });
+        mouseDownCompCoords = null;
+
         loginPanel = new JPanel();
+
 
         loginPanel.setLayout(null);
         loginPanel.setPreferredSize(new Dimension(1000, 600));
@@ -90,21 +127,26 @@ public class patientEntry{
         frame.add(loginPanel, BorderLayout.CENTER);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("Login");
+        frame.setUndecorated(true);
         frame.pack();
         frame.setVisible(true);
+
     }
 
     public static void main(String[] args) {
         new patientEntry();
+        
     }
 
     private class ButtonListener implements ActionListener
     {
         public void actionPerformed(ActionEvent e)
         {
-    
-            //open here
+            login.frame.setVisible(false);
+            new receptionist();
         }
 
     }
+
+
 }
