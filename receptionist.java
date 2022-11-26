@@ -39,12 +39,14 @@ public class receptionist {
     private JTable table;
     private DefaultTableModel model;
     private JPanel listPanel;
+    private boolean onmain = true;
 
 
     private JPanel patientinfo;
     private JPanel chart;
     private JPanel tbl2;
     private JPanel tbl;
+    private JPanel listPanelmain;
     public receptionist()
     {
         JFrame frame = new JFrame();
@@ -99,6 +101,8 @@ public class receptionist {
         admiss.setBounds(0, 0, 250, 45);
         admiss.setBackground(Color.WHITE);
         upperbutton.add(admiss);
+
+        admiss.addActionListener(new admissButtonListener());
 
         JButton listingbase = new JButton("Patient Listing");
         listingbase.setBounds(250, 0, 250, 45);
@@ -311,7 +315,7 @@ public class receptionist {
 
         tbl = new JPanel();
         tbl.setLayout(new BorderLayout());
-        tbl.setBounds(25, 60, 1400, 250);
+        tbl.setBounds(25, 60, 1400, 223);
         tbl.setBackground(Color.WHITE);
     
 
@@ -372,9 +376,9 @@ public class receptionist {
        
         tpanel.add(titleinfo);
         createlistframe();
-        listPanel.setVisible(false);
+        listPanelmain.setVisible(false);
 
-        frame.add(listPanel);
+        frame.add(listPanelmain);
         frame.add(recepPanel, BorderLayout.CENTER);
         frame.setUndecorated(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -425,21 +429,123 @@ public class receptionist {
         public void actionPerformed(ActionEvent e)
         {
             //hideEntry();
+            onmain =false;
             hideEntry();
-            listPanel.setVisible(true);
+            listPanelmain.setVisible(true);
+        }
+
+    }
+
+    private class admissButtonListener implements ActionListener
+    {
+        public void actionPerformed(ActionEvent e)
+        {
+            //hideEntry();
+            onmain =true;
+            hideEntry();
+            listPanelmain.setVisible(false);
         }
 
     }
 
     public void createlistframe()
     {
+       
+
         listPanel = new JPanel();
-        listPanel.setBackground(Color.BLACK);
         listPanel.setLayout(new BorderLayout());
-        listPanel.setBounds(0, 115, 1500, 845);
+        listPanel.setBounds(25, 115, 1450, 650);
         listPanel.setBackground(Color.white);
-           String[] coloumnNames = {"ID", "Name", "Doctor", "Age", "Amount Paid", "Date"};
-        String[] item={"1","Teric Simons","3","4","5","6"};
+
+        JPanel filterPanel = new JPanel();
+        filterPanel.setLayout(null);
+        filterPanel.setBounds(25, 0, 1450, 100);
+        filterPanel.setBackground(Color.white);
+
+        JLabel filterlabel = new JLabel("Filter:");
+        filterlabel.setBounds(450, 40, 125, 40);
+        filterlabel.setFont(new Font("Serif", Font.PLAIN, 40));
+        filterPanel.add(filterlabel);
+
+        JLabel baseLabel = new JLabel("Patient Database");
+        baseLabel.setBounds(20, 10, 600, 40);
+        baseLabel.setFont(new Font("Serif", Font.PLAIN, 50));
+        filterPanel.add(baseLabel);
+        
+
+        JButton OK = new JButton("OK");
+        OK.setBounds(1320, 40, 120, 35);
+        OK.setBackground(Color.WHITE);
+        filterPanel.add(OK);
+
+        JLabel valuee = new JLabel("Value");
+        valuee.setBounds(1200, 5, 125, 40);
+        valuee.setBackground(Color.BLUE);
+        valuee.setFont(new Font("Serif", Font.PLAIN, 17));
+        filterPanel.add(valuee);
+
+        String group[]={" "};        
+        JComboBox valueinput=new JComboBox(group);
+        valueinput.setBounds(1170, 35, 125, 25);
+        filterPanel.add(valueinput);
+
+        String group2[]={" "};        
+        JComboBox valueinput2=new JComboBox(group2);
+        valueinput2.setBounds(1170, 65, 125, 25);
+        filterPanel.add(valueinput2);
+
+
+        JLabel con = new JLabel("Condition");
+        con.setBounds(1000, 5, 125, 40);
+        con.setFont(new Font("Serif", Font.PLAIN, 17));
+        con.setBackground(Color.BLUE);
+        filterPanel.add(con);
+
+        String group3[]={" ", "=", "<", ">"};        
+        JComboBox valueinput3=new JComboBox(group3);
+        valueinput3.setBounds(970, 35, 125, 25);
+        filterPanel.add(valueinput3);
+        
+        JComboBox valueinput4=new JComboBox(group3);
+        valueinput4.setBounds(970, 65, 125, 25);
+        filterPanel.add(valueinput4);
+
+     
+
+        JLabel field = new JLabel("Field Name");
+        field.setBounds(800, 5, 125, 40);
+        field.setFont(new Font("Serif", Font.PLAIN, 17));
+        field.setBackground(Color.BLUE);
+        filterPanel.add(field);
+
+        String group4[]={" "};        
+        JComboBox valueinput5=new JComboBox(group4);
+        valueinput5.setBounds(770, 35, 125, 25);
+        filterPanel.add(valueinput5);
+        
+        JComboBox valueinput6=new JComboBox(group4);
+        valueinput6.setBounds(770, 65, 125, 25);
+        filterPanel.add(valueinput6);
+
+        JLabel operator = new JLabel("Operator");
+        operator.setBounds(600, 5, 125, 40);
+        operator.setFont(new Font("Serif", Font.PLAIN, 17));
+        operator.setBackground(Color.BLUE);
+        filterPanel.add(operator);
+
+        String group5[]={" ", "AND", "OR"}; 
+        JComboBox valueinput7=new JComboBox(group5);
+        valueinput7.setBounds(570, 50, 125, 25);
+        filterPanel.add(valueinput7);
+
+
+
+
+        listPanelmain = new JPanel();
+        listPanelmain.setLayout(null);
+        listPanelmain.setBounds(0, 115, 1500, 845);
+           String[] coloumnNames = {"#","ID", "Name", "Doctor", "Age", "Amount Paid", "Date"};
+        
 
         DefaultTableModel model = new DefaultTableModel(coloumnNames, 0);
         JTable table = new JTable(model);
@@ -455,8 +561,16 @@ public class receptionist {
         
 
         table.setShowVerticalLines(false);
-       model.addRow(item);
-       model.addRow(item);
+        for(int i =0;i <60 ; i++)
+        {
+            model.addRow(new String[]{Integer.toString(i+1),"Teric Simons","3","4","5","6"});
+        }
+        table.getColumnModel().getColumn(0).setPreferredWidth(1);
+        JLabel totalLabel = new JLabel("Total:"+Integer.toString(60));
+        totalLabel.setBounds(100, 62, 100, 40);
+        totalLabel.setFont(new Font("Serif", Font.CENTER_BASELINE, 20));
+        filterPanel.add(totalLabel);
+   
        table.setRowHeight(37);
        table.getTableHeader().setFont(new Font("Serif", Font.BOLD, 17));
        table.getTableHeader().setPreferredSize(new Dimension(100, 35));
@@ -464,19 +578,29 @@ public class receptionist {
        table.setFillsViewportHeight(true);
        JScrollPane scrollPane = new JScrollPane(table);
        scrollPane.setBorder(new LineBorder(null, 5));
-
-    
-       
-       
        
        listPanel.add(scrollPane);
+       listPanelmain.add(filterPanel);
+       listPanelmain.add(listPanel);
+       
+
     }
 
     public void hideEntry()
     {
-    patientinfo.setVisible(false);
-    chart.setVisible(false);
-    tbl2.setVisible(false);
+        if(onmain)
+        {
+            patientinfo.setVisible(true);
+            chart.setVisible(true);
+            tbl2.setVisible(true);
+        }
+        else
+        {
+            patientinfo.setVisible(false);
+            chart.setVisible(false);
+            tbl2.setVisible(false);
+        }
+
     
     }
     
