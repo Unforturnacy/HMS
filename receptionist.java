@@ -1,4 +1,7 @@
 import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.border.MatteBorder;
+
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -35,6 +38,13 @@ public class receptionist {
     private JLabel titleinfo;
     private JTable table;
     private DefaultTableModel model;
+    private JPanel listPanel;
+
+
+    private JPanel patientinfo;
+    private JPanel chart;
+    private JPanel tbl2;
+    private JPanel tbl;
     public receptionist()
     {
         JFrame frame = new JFrame();
@@ -90,17 +100,19 @@ public class receptionist {
         admiss.setBackground(Color.WHITE);
         upperbutton.add(admiss);
 
-        JButton listingbase = new JButton("Patient Listings");
+        JButton listingbase = new JButton("Patient Listing");
         listingbase.setBounds(250, 0, 250, 45);
         listingbase.setBackground(Color.WHITE);
         upperbutton.add(listingbase);
+
+        listingbase.addActionListener(new listingButtonListener());
 
         JButton dailyacc = new JButton("Daily Account");
         dailyacc.setBounds(500, 0, 250, 45);
         dailyacc.setBackground(Color.WHITE);
         upperbutton.add(dailyacc);
        
-        JPanel patientinfo = new JPanel();
+        patientinfo = new JPanel();
         patientinfo.setLayout(null);
         patientinfo.setBounds(15, 115, 750, 470);
         patientinfo.setBackground(Color.WHITE);
@@ -276,7 +288,7 @@ public class receptionist {
         
 
         //CHART
-        JPanel chart = new JPanel();
+        chart = new JPanel();
         chart.setLayout(null);
         chart.setBounds(790, 115, 685, 470);
         chart.setBackground(Color.WHITE);
@@ -297,13 +309,13 @@ public class receptionist {
         //TAble section
         
 
-        JPanel tbl = new JPanel();
+        tbl = new JPanel();
         tbl.setLayout(new BorderLayout());
         tbl.setBounds(25, 60, 1400, 250);
         tbl.setBackground(Color.WHITE);
     
 
-        JPanel tbl2 = new JPanel();
+        tbl2 = new JPanel();
         tbl2.setLayout( null);
         tbl2.setBounds(20, 610, 1460, 300);
         tbl2.setBackground(Color.WHITE);
@@ -321,12 +333,17 @@ public class receptionist {
        table = new JTable(model);
        table.setFont(new Font("Serif", Font.PLAIN, 16));
        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+       centerRenderer.setBorder(null);
+        table.getTableHeader().setDefaultRenderer(centerRenderer);
         centerRenderer.setHorizontalAlignment( JLabel.CENTER );
         for (int columnIndex = 0; columnIndex < table.getColumnCount(); columnIndex++)
         {
             table.getColumnModel().getColumn(columnIndex).setCellRenderer(centerRenderer);
         }
         
+
+        table.setShowVerticalLines(false);
+       model.addRow(item);
        model.addRow(item);
        table.setRowHeight(37);
        table.getTableHeader().setFont(new Font("Serif", Font.BOLD, 17));
@@ -334,7 +351,10 @@ public class receptionist {
        table.setPreferredScrollableViewportSize(new Dimension(1460, 250));
        table.setFillsViewportHeight(true);
        JScrollPane scrollPane = new JScrollPane(table);
-       scrollPane.setBorder(BorderFactory.createEmptyBorder());
+       scrollPane.setBorder(new LineBorder(null, 5));
+
+
+    
        
        
        
@@ -351,8 +371,10 @@ public class receptionist {
         titleinfo.setFont(new Font("Monospaced", Font.ITALIC, 18));
        
         tpanel.add(titleinfo);
+        createlistframe();
+        listPanel.setVisible(false);
 
-
+        frame.add(listPanel);
         frame.add(recepPanel, BorderLayout.CENTER);
         frame.setUndecorated(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -396,6 +418,66 @@ public class receptionist {
             displaychart();
         }
 
+    }
+
+    private class listingButtonListener implements ActionListener
+    {
+        public void actionPerformed(ActionEvent e)
+        {
+            //hideEntry();
+            hideEntry();
+            listPanel.setVisible(true);
+        }
+
+    }
+
+    public void createlistframe()
+    {
+        listPanel = new JPanel();
+        listPanel.setBackground(Color.BLACK);
+        listPanel.setLayout(new BorderLayout());
+        listPanel.setBounds(0, 115, 1500, 845);
+        listPanel.setBackground(Color.white);
+           String[] coloumnNames = {"ID", "Name", "Doctor", "Age", "Amount Paid", "Date"};
+        String[] item={"1","Teric Simons","3","4","5","6"};
+
+        DefaultTableModel model = new DefaultTableModel(coloumnNames, 0);
+        JTable table = new JTable(model);
+       table.setFont(new Font("Serif", Font.PLAIN, 16));
+       DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+       centerRenderer.setBorder(null);
+        table.getTableHeader().setDefaultRenderer(centerRenderer);
+        centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+        for (int columnIndex = 0; columnIndex < table.getColumnCount(); columnIndex++)
+        {
+            table.getColumnModel().getColumn(columnIndex).setCellRenderer(centerRenderer);
+        }
+        
+
+        table.setShowVerticalLines(false);
+       model.addRow(item);
+       model.addRow(item);
+       table.setRowHeight(37);
+       table.getTableHeader().setFont(new Font("Serif", Font.BOLD, 17));
+       table.getTableHeader().setPreferredSize(new Dimension(100, 35));
+       table.setPreferredScrollableViewportSize(new Dimension(1460, 250));
+       table.setFillsViewportHeight(true);
+       JScrollPane scrollPane = new JScrollPane(table);
+       scrollPane.setBorder(new LineBorder(null, 5));
+
+    
+       
+       
+       
+       listPanel.add(scrollPane);
+    }
+
+    public void hideEntry()
+    {
+    patientinfo.setVisible(false);
+    chart.setVisible(false);
+    tbl2.setVisible(false);
+    
     }
     
 }
