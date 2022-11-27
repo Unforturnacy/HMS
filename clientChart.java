@@ -89,21 +89,87 @@ public class clientChart {
 
         pastap = new JPanel();
         pastap.setLayout(new BorderLayout());
-        pastap.setBounds(0, 300, 950, 250);
+        pastap.setBounds(0, 300, 950, 245);
         pastap.setBackground(Color.blue);
         chartPanel.add(pastap);
         //picture
         JPanel symp1 = new JPanel();
         symp1.setLayout(null);
-        symp1.setBounds(100, 30, 150, 200);
+        symp1.setBounds(100, 30, 200, 200);
         symp1.setBackground(Color.red);
         info.add(symp1);
 
+        JLabel userIcon1 = new JLabel(new ImageIcon("images\\emptyperson.jpg"));
+        userIcon1.setBounds(0, 0, 200, 200);
+        symp1.add(userIcon1);
+
+
+
         JPanel symp = new JPanel();
         symp.setLayout(new BorderLayout());
-        symp.setBounds(700, 25, 200, 250);
+        symp.setBounds(730, 25, 200, 250);
         symp.setBackground(Color.red);
         info.add(symp);
+
+        JLabel nameLabel  = new JLabel("SIMONS, TERIC");
+        nameLabel.setBounds(345, 35, 1500, 50);
+        nameLabel.setFont(new Font("Serif", Font.PLAIN, 30));
+        info.add(nameLabel);
+
+        JLabel agegenderLabel  = new JLabel("Male, Age 20");
+        agegenderLabel.setBounds(345, 75, 1500, 50);
+        agegenderLabel.setFont(new Font("Serif", Font.BOLD, 15));
+        info.add(agegenderLabel);
+
+        JLabel doc  = new JLabel("Doctor");
+        doc.setBounds(345, 105, 1500, 50);
+        doc.setFont(new Font("Serif", Font.BOLD, 15));
+        info.add(doc);
+
+        JLabel doc1  = new JLabel("Grant, Matthew MD.");
+        doc1.setBounds(400, 105, 1500, 50);
+        doc1.setFont(new Font("Serif", Font.PLAIN, 15));
+        info.add(doc1);
+
+        JLabel date  = new JLabel("Apt date");
+        date.setBounds(345, 170, 1500, 50);
+        date.setFont(new Font("Serif", Font.BOLD, 15));
+        info.add(date);
+
+        JLabel date1  = new JLabel("11/27/2002");
+        date1.setBounds(440, 170, 1500, 50);
+        date1.setFont(new Font("Serif", Font.PLAIN, 15));
+        info.add(date1);
+
+        JLabel dob  = new JLabel("DOB");
+        dob.setBounds(345, 140, 1500, 50);
+        dob.setFont(new Font("Serif", Font.BOLD, 15));
+        info.add(dob);
+
+        JLabel dob1  = new JLabel("07/12/2002");
+        dob1.setBounds(440, 140, 1500, 50);
+        dob1.setFont(new Font("Serif", Font.PLAIN, 15));
+        info.add(dob1);
+
+        JLabel phone  = new JLabel("Phone");
+        phone.setBounds(545, 140, 1500, 50);
+        phone.setFont(new Font("Serif", Font.BOLD, 15));
+        info.add(phone);
+
+        JLabel phone1  = new JLabel("876-123-4567");
+        phone1.setBounds(640, 140, 1500, 50);
+        phone1.setFont(new Font("Serif", Font.PLAIN, 15));
+        info.add(phone1);
+
+        JLabel med  = new JLabel("Medical");
+        med.setBounds(545, 170, 1500, 50);
+        med.setFont(new Font("Serif", Font.BOLD, 15));
+        info.add(med);
+
+        JLabel med1  = new JLabel("Yes");
+        med1.setBounds(545, 140, 1500, 50);
+        med1.setFont(new Font("Serif", Font.PLAIN, 15));
+        info.add(med1);
 
         String[] coloumnNames = {"Sypmtoms"};
         
@@ -187,7 +253,7 @@ public class clientChart {
         table.setShowVerticalLines(false);
         for(int i =0;i <10 ; i++)
         {
-            model.addRow(new String[]{"Date","Assigned To",});
+            model.addRow(new String[]{"11/28/2011","Dr. Ranaldo Green", "CANCELLED",});
         }
     
    

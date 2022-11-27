@@ -544,7 +544,7 @@ public class receptionist {
         listPanelmain = new JPanel();
         listPanelmain.setLayout(null);
         listPanelmain.setBounds(0, 115, 1500, 845);
-           String[] coloumnNames = {"#","ID", "Name", "Doctor", "Age", "Amount Paid", "Date"};
+           String[] coloumnNames = {"#","ID", "Name", "Doctor", "Age", "Amount Paid","Payment Type", "Date"};
         
 
         DefaultTableModel model = new DefaultTableModel(coloumnNames, 0);
