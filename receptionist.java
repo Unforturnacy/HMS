@@ -548,7 +548,26 @@ public class receptionist {
         
 
         DefaultTableModel model = new DefaultTableModel(coloumnNames, 0);
-        JTable table = new JTable(model);
+        JTable table = new JTable(model) {
+            private static final long serialVersionUID = 1L;
+    
+            public boolean isCellEditable(int row, int column) {                
+                    return false;               
+            };
+        };
+
+        table.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent me) {
+               if (me.getClickCount() == 2) {     // to detect doble click events
+                  JTable target = (JTable)me.getSource();
+                  int row = target.getSelectedRow(); // select a row
+                  createChart(row);
+               }
+            }
+         });
+
+         table.setFocusable(false);
+    
        table.setFont(new Font("Serif", Font.PLAIN, 16));
        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
        centerRenderer.setBorder(null);
@@ -584,6 +603,11 @@ public class receptionist {
        listPanelmain.add(listPanel);
        
 
+    }
+
+    public void createChart(int row)
+    {
+        new clientChart();
     }
 
     public void hideEntry()
