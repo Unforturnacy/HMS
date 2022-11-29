@@ -1,8 +1,35 @@
 import javax.swing.*;
-import java.awt.event.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.border.MatteBorder;
+import javax.swing.plaf.TableHeaderUI;
+import javax.swing.plaf.basic.BasicButtonUI;
+import javax.swing.plaf.basic.BasicPanelUI;
+import javax.swing.plaf.metal.MetalBorders.TableHeaderBorder;
+
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.text.AttributeSet.ColorAttribute;
+
+import java.lang.Object;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.font.*;
+import java.awt.Font;
 
 public class feedback extends JFrame implements ActionListener{
     
@@ -21,7 +48,7 @@ public class feedback extends JFrame implements ActionListener{
     JRadioButton four;
     JRadioButton five;
     ButtonGroup rating;
-    String[] ages= {"Below 18","18-44","45-60","Above 60"};
+
         
     public feedback(){
         this.setTitle("Client Form");
@@ -30,7 +57,7 @@ public class feedback extends JFrame implements ActionListener{
         this.setSize(500, 440);
         cp= getContentPane();
         this.setLayout(null);
-        this.cp.setBackground(new java.awt.Color(0xA6E3E9));
+        this.cp.setBackground(Color.decode("#54aeef"));
 
         ImageIcon icon= new ImageIcon("icon.png");
         this.setIconImage(icon.getImage());
@@ -38,7 +65,8 @@ public class feedback extends JFrame implements ActionListener{
         JLabel heading= new JLabel();
         heading.setText("FEEDBACK SURVEY");
         heading.setFont(new Font("Arial", Font.BOLD, 36));
-        heading.setBounds(80,0,440,45);
+        heading.setBounds(60,0,440,45);
+        heading.setForeground(Color.black);
         this.cp.add(heading);
 
 
@@ -82,18 +110,41 @@ public class feedback extends JFrame implements ActionListener{
         this.cp.add(tfeedback);
 
         submit= new JButton("Submit");
-        submit.setFont(new Font("Calibri", Font.PLAIN, 18));
-        submit.setBounds(145, 375, 100, 28);
+        submit.setForeground(Color.black);
+        submit.setFont(new Font("Serif", Font.BOLD, 17));
+        submit.setBorderPainted(false);
+        submit.setFocusPainted(false);
+        submit.setBackground(Color.WHITE);
         submit.addActionListener(this);
+        submit.setBounds(125, 375, 100, 28);
         this.cp.add(submit);
 
         reset= new JButton("Reset");
-        reset.setFont(new Font("Calibri", Font.PLAIN, 18));
+        reset.setForeground(Color.black);
+        reset.setFont(new Font("Serif", Font.BOLD, 17));
+        reset.setBorderPainted(false);
+        reset.setFocusPainted(false);
+        reset.setBackground(Color.WHITE);
         reset.setBounds(255, 375, 100, 28);
         reset.addActionListener(this);
         this.cp.add(reset);
 
         this.setVisible(true);
+
+        SwingUtilities.invokeLater(() -> {
+            Map<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
+            attributes.put(TextAttribute.TRACKING, 0.03);
+    
+            lname.setFont(lname.getFont().deriveFont(attributes));
+            lmail.setFont(lmail.getFont().deriveFont(attributes));
+            lfeedback.setFont(lfeedback.getFont().deriveFont(attributes));
+            heading.setFont(heading.getFont().deriveFont(attributes));
+            submit.setFont(submit.getFont().deriveFont(attributes));
+            reset.setFont(reset.getFont().deriveFont(attributes));
+            
+        
+            
+        });
     }
 
     //@Override
@@ -155,4 +206,62 @@ public class feedback extends JFrame implements ActionListener{
         }
 
     }
+
+
+    class StyledButtonUI extends BasicButtonUI  {
+
+        @Override
+        public void installUI (JComponent c) {
+            super.installUI(c);
+            AbstractButton button = (AbstractButton) c;
+            button.setOpaque(false);
+            button.setBorder(new EmptyBorder(5, 15, 5, 15));
+        }
+    
+        @Override
+        public void paint (Graphics g, JComponent c) {
+            AbstractButton b = (AbstractButton) c;
+            paintBackground(g, b, b.getModel().isPressed() ? 2 : 0);
+            super.paint(g, c);
+        }
+    
+        private void paintBackground (Graphics g, JComponent c, int yOffset) {
+            Dimension size = c.getSize();
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g.setColor(c.getBackground().darker());
+            g.fillRoundRect(0, yOffset, size.width, size.height - yOffset, 10, 1);
+            g.setColor(c.getBackground());
+            g.fillRoundRect(0, yOffset, size.width, size.height + yOffset - 2, 10, 1);
+        }
+    }
+
+    public class StyledPanelUI extends BasicPanelUI  {
+
+        @Override
+        public void installUI (JComponent c) {
+            super.installUI(c);
+            JPanel button = (JPanel) c;
+            button.setOpaque(false);
+            button.setBorder(new EmptyBorder(5, 15, 5, 15));
+        }
+    
+        @Override
+        public void paint (Graphics g, JComponent c) {
+            JPanel b = (JPanel) c;
+            paintBackground(g, b,0);
+            super.paint(g, c);
+        }
+    
+        private void paintBackground (Graphics g, JComponent c, int yOffset) {
+            Dimension size = c.getSize();
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g.setColor(c.getBackground().darker());
+            g.fillRoundRect(0, yOffset, size.width, size.height - yOffset, 10, 1);
+            g.setColor(c.getBackground());
+            g.fillRoundRect(0, yOffset, size.width, size.height + yOffset - 1, 10, 1);
+        }
+    }
+    
 }

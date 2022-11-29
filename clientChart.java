@@ -1,6 +1,11 @@
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
+import javax.swing.plaf.TableHeaderUI;
+import javax.swing.plaf.basic.BasicButtonUI;
+import javax.swing.plaf.basic.BasicPanelUI;
+import javax.swing.plaf.metal.MetalBorders.TableHeaderBorder;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -9,14 +14,20 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.text.AttributeSet.ColorAttribute;
 
+import java.lang.Object;
+import java.util.HashMap;
+import java.util.Map;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.font.*;
+import java.awt.Font;
 
 
 public class clientChart {
@@ -84,8 +95,9 @@ public class clientChart {
         JPanel info = new JPanel();
         info.setLayout(null);
         info.setBounds(0, 0, 950, 300);
-        info.setBackground(Color.green);
+        info.setBackground(Color.decode("#54aeef"));
         chartPanel.add(info);
+        info.setUI(new StyledPanelUI());
 
         pastap = new JPanel();
         pastap.setLayout(new BorderLayout());
@@ -171,31 +183,53 @@ public class clientChart {
         med1.setFont(new Font("Serif", Font.PLAIN, 15));
         info.add(med1);
 
+
+        SwingUtilities.invokeLater(() -> {
+            Map<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
+            attributes.put(TextAttribute.TRACKING, 0.03);
+    
+            nameLabel.setFont(nameLabel.getFont().deriveFont(attributes));
+            phone.setFont(phone.getFont().deriveFont(attributes));
+            med.setFont(med.getFont().deriveFont(attributes));
+            med1.setFont(med1.getFont().deriveFont(attributes));
+            phone1.setFont(phone1.getFont().deriveFont(attributes));
+            dob.setFont(dob.getFont().deriveFont(attributes));
+            dob1.setFont(dob1.getFont().deriveFont(attributes));
+            
+        });
         String[] coloumnNames = {"Sypmtoms"};
         
 
-        DefaultTableModel model = new DefaultTableModel(coloumnNames, 0);
-        JTable table = new JTable(model) {
-            private static final long serialVersionUID = 1L;
-    
-            public boolean isCellEditable(int row, int column) {                
-                    return false;               
-            };
-        };
-         table.setFocusable(false);
-    
-       table.setFont(new Font("Serif", Font.PLAIN, 16));
-       DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-       centerRenderer.setBorder(null);
-        table.getTableHeader().setDefaultRenderer(centerRenderer);
-        centerRenderer.setHorizontalAlignment( JLabel.CENTER );
-        for (int columnIndex = 0; columnIndex < table.getColumnCount(); columnIndex++)
-        {
-            table.getColumnModel().getColumn(columnIndex).setCellRenderer(centerRenderer);
-        }
-        
+        DefaultTableModel model =new DefaultTableModel(coloumnNames, 0) {
 
-        table.setShowVerticalLines(false);
+            @Override
+            public boolean isCellEditable(int row, int column) {       
+                return false; // or a condition at your choice with row and column
+            }
+         };
+         
+           table = new JTable(model);
+           table.setRowSelectionAllowed(false);
+    
+    
+            JTableHeader header = table.getTableHeader();
+            header.setBorder(null);
+            header.setFont(new Font("Serif", Font.BOLD, 20));
+            header.setBackground(Color.decode("#54aeef"));
+            header.setForeground(Color.WHITE);
+           DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+           centerRenderer.setBorder(null);
+           table.setFont(new Font("Serif", Font.PLAIN, 16));
+         
+            centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+            for (int columnIndex = 0; columnIndex < table.getColumnCount(); columnIndex++)
+            {
+                table.getColumnModel().getColumn(columnIndex).setCellRenderer(centerRenderer);
+            }
+            
+    
+            table.setShowVerticalLines(false);
+    
         for(int i =0;i <10 ; i++)
         {
             model.addRow(new String[]{"Cancer"});
@@ -208,7 +242,7 @@ public class clientChart {
        table.setPreferredScrollableViewportSize(new Dimension(200, 50));
        table.setFillsViewportHeight(true);
        JScrollPane scrollPane = new JScrollPane(table);
-       scrollPane.setBorder(new LineBorder(null, 5));
+       scrollPane.setBorder(new LineBorder(Color.WHITE, 5));
 
        symp.add(scrollPane);
        pasapp();
@@ -229,28 +263,36 @@ public class clientChart {
         String[] coloumnNames = {"Date","Assigned To","Status"};
         
 
-        DefaultTableModel model = new DefaultTableModel(coloumnNames, 0);
-        JTable table = new JTable(model) {
-            private static final long serialVersionUID = 1L;
-    
-            public boolean isCellEditable(int row, int column) {                
-                    return false;               
-            };
-        };
-         table.setFocusable(false);
-    
-       table.setFont(new Font("Serif", Font.PLAIN, 16));
-       DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-       centerRenderer.setBorder(null);
-        table.getTableHeader().setDefaultRenderer(centerRenderer);
-        centerRenderer.setHorizontalAlignment( JLabel.CENTER );
-        for (int columnIndex = 0; columnIndex < table.getColumnCount(); columnIndex++)
-        {
-            table.getColumnModel().getColumn(columnIndex).setCellRenderer(centerRenderer);
-        }
-        
+        DefaultTableModel model = new DefaultTableModel(coloumnNames, 0) {
 
-        table.setShowVerticalLines(false);
+            @Override
+            public boolean isCellEditable(int row, int column) {       
+                return false; // or a condition at your choice with row and column
+            }
+         };
+         
+           table = new JTable(model);
+           table.setRowSelectionAllowed(false);
+    
+    
+            JTableHeader header = table.getTableHeader();
+            header.setBorder(null);
+            header.setFont(new Font("Serif", Font.BOLD, 20));
+            header.setBackground(Color.decode("#54aeef"));
+            header.setForeground(Color.WHITE);
+           DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+           centerRenderer.setBorder(null);
+           table.setFont(new Font("Serif", Font.PLAIN, 16));
+         
+            centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+            for (int columnIndex = 0; columnIndex < table.getColumnCount(); columnIndex++)
+            {
+                table.getColumnModel().getColumn(columnIndex).setCellRenderer(centerRenderer);
+            }
+            
+    
+            table.setShowVerticalLines(false);
+    
         for(int i =0;i <10 ; i++)
         {
             model.addRow(new String[]{"11/28/2011","Dr. Ranaldo Green", "CANCELLED",});
@@ -263,9 +305,43 @@ public class clientChart {
        table.setPreferredScrollableViewportSize(new Dimension(200, 50));
        table.setFillsViewportHeight(true);
        JScrollPane scrollPane = new JScrollPane(table);
-       scrollPane.setBorder(new LineBorder(null, 5));
+       scrollPane.setBorder(new LineBorder(Color.decode("#54aeef"), 5));
 
        pastap.add(scrollPane);
+
+
+
+
+
+       
+    }
+
+    public class StyledPanelUI extends BasicPanelUI  {
+
+        @Override
+        public void installUI (JComponent c) {
+            super.installUI(c);
+            JPanel button = (JPanel) c;
+            button.setOpaque(false);
+            button.setBorder(new EmptyBorder(5, 15, 5, 15));
+        }
+    
+        @Override
+        public void paint (Graphics g, JComponent c) {
+            JPanel b = (JPanel) c;
+            paintBackground(g, b,0);
+            super.paint(g, c);
+        }
+    
+        private void paintBackground (Graphics g, JComponent c, int yOffset) {
+            Dimension size = c.getSize();
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g.setColor(c.getBackground().darker());
+            g.fillRoundRect(0, yOffset, size.width, size.height - yOffset, 10, 1);
+            g.setColor(c.getBackground());
+            g.fillRoundRect(0, yOffset, size.width, size.height + yOffset - 1, 10, 1);
+        }
     }
     
 }

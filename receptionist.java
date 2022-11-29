@@ -2,7 +2,10 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
+import javax.swing.plaf.TableHeaderUI;
 import javax.swing.plaf.basic.BasicButtonUI;
+import javax.swing.plaf.basic.BasicPanelUI;
+import javax.swing.plaf.metal.MetalBorders.TableHeaderBorder;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -13,11 +16,18 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.text.AttributeSet.ColorAttribute;
+
 import java.lang.Object;
+import java.util.HashMap;
+import java.util.Map;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.font.*;
+import java.awt.Font;
 
 public class receptionist {
     private JPanel recepPanel;
@@ -81,7 +91,39 @@ public class receptionist {
 
         recepPanel.setLayout(null);
         recepPanel.setPreferredSize(new Dimension(1500, 890));
-        recepPanel.setBackground(Color.decode("#EFF3F6"));
+        Color color = recepPanel.getBackground ();
+        System.out.println(color);
+
+        JButton xbut = new JButton(new ImageIcon("images\\x.png"));
+        xbut.setBounds(1470, 0, 30, 30);
+        xbut.setBackground(new Color(0,0,0,0));
+        xbut.setFont(new Font("Serif", Font.BOLD, 18));
+        xbut.setBorderPainted(false);
+        xbut.setFocusPainted(false);
+        xbut.setForeground(Color.WHITE);
+        xbut.setRolloverEnabled(false);
+        recepPanel.add(xbut);
+
+        JButton plus = new JButton(new ImageIcon("images\\+.png"));
+        plus.setBounds(1430, 0, 30, 30);
+        plus.setBackground(new Color(0,0,0,0));
+        plus.setFont(new Font("Serif", Font.BOLD, 18));
+        plus.setBorderPainted(false);
+        plus.setFocusPainted(false);
+        plus.setRolloverEnabled(false);
+        plus.setForeground(Color.WHITE);
+        recepPanel.add(plus);
+
+        JButton min = new JButton(new ImageIcon("images\\min.png"));
+        min.setBounds(1390, 0, 30, 30);
+        min.setBorderPainted(false);
+        min.setFocusPainted(false);
+        min.setRolloverEnabled(false);
+        min.setForeground(Color.WHITE);
+        recepPanel.add(min);
+   
+      
+
 
 
 
@@ -89,8 +131,32 @@ public class receptionist {
         listRenderer.setHorizontalAlignment(DefaultListCellRenderer.CENTER);
         
         JLabel title  = new JLabel("Receptionist Panel", SwingConstants.CENTER);
-        title.setBackground(Color.BLUE);
-        title.setBounds(0, 0, 1500, 50);
+        title.setOpaque(true);
+        title.setFont(new Font("Serif", Font.PLAIN, 28));
+        title.setBackground(Color.WHITE);
+        title.setBounds(0, 10, 1500, 50);
+
+        recepPanel.add(title);
+
+        JPanel top = new JPanel();
+        top.setLayout(null);
+        top.setBounds(0, 0, 1500, 10);
+        top.setBackground(Color.decode("#54aeef"));
+        recepPanel.add(top);
+
+        JPanel left = new JPanel();
+        left.setLayout(null);
+        left.setBounds(0, 0, 10, 1500);
+        left.setBackground(Color.decode("#54aeef"));
+        recepPanel.add(left);
+
+        JPanel right = new JPanel();
+        right.setLayout(null);
+        right.setBounds(1490, 0, 10, 1500);
+        right.setBackground(Color.decode("#54aeef"));
+        recepPanel.add(right);
+
+        
         recepPanel.add(title);
 
         upperbutton = new JPanel();
@@ -112,19 +178,36 @@ public class receptionist {
         admiss.addActionListener(new admissButtonListener());
 
         JButton listingbase = new JButton("Patient Listing");
-        listingbase.setBounds(250, 0, 250, 45);
+        listingbase.setBounds(200, 0, 200, 45);
+        listingbase.setFont(new Font("Serif", Font.BOLD, 18));
+        
+        listingbase.setBorderPainted(false);
+        listingbase.setFocusPainted(false);
+        listingbase.setForeground(Color.decode("#54aeef"));
+        listingbase.setUI(new StyledButtonUI());
         listingbase.setBackground(Color.WHITE);
         upperbutton.add(listingbase);
 
         listingbase.addActionListener(new listingButtonListener());
 
-        JButton dailyacc = new JButton("Daily Account");
-        dailyacc.setBounds(500, 0, 250, 45);
+        JButton dailyacc = new JButton("Inventory");
+        dailyacc.setBounds(400, 0, 200, 45);
+        dailyacc.setFont(new Font("Serif", Font.BOLD, 18));
+        
+        dailyacc.setBorderPainted(false);
+        dailyacc.setFocusPainted(false);
+        dailyacc.setForeground(Color.decode("#54aeef"));
+        dailyacc.setUI(new StyledButtonUI());
         dailyacc.setBackground(Color.WHITE);
         upperbutton.add(dailyacc);
 
         JButton feedback = new JButton("Submit Feedback");
         feedback.setBounds(1299, 0, 200, 45);
+        feedback.setFont(new Font("Serif", Font.BOLD, 18));
+        feedback.setBorderPainted(false);
+        listingbase.setFocusPainted(false);
+        feedback.setForeground(Color.decode("#54aeef"));
+        feedback.setUI(new StyledButtonUI());
         feedback.setBackground(Color.WHITE);
         upperbutton.add(feedback);
 
@@ -134,21 +217,32 @@ public class receptionist {
         patientinfo.setLayout(null);
         patientinfo.setBounds(15, 115, 750, 470);
         patientinfo.setBackground(Color.WHITE);
+        patientinfo.setUI(new StyledPanelUI());
         frame.add(patientinfo);
 
         JLabel patientinfotit  = new JLabel("Patient Information");
         patientinfotit.setBounds(20, 0, 300, 50);
-        patientinfotit.setFont(new Font("Serif", Font.PLAIN, 20));
+        patientinfotit.setFont(new Font("Serif", Font.BOLD, 20));
         patientinfo.add(patientinfotit);
 
-        JButton newb = new JButton("NEW");
+        JButton newb = new JButton("New");
         newb.setBounds(600, 10, 105, 39);
-        newb.setBackground(Color.WHITE);
+        newb.setBackground(Color.decode("#54aeef"));
+        newb.setFont(new Font("Serif", Font.BOLD, 18));
+        newb.setBorderPainted(false);
+        newb.setFocusPainted(false);
+        newb.setForeground(Color.WHITE);
+        newb.setUI(new StyledButtonUI());
         patientinfo.add(newb);
 
-        JButton del = new JButton("DELETE");
+        JButton del = new JButton("Delete");
         del.setBounds(470, 10, 105, 39);
-        del.setBackground(Color.WHITE);
+        del.setBackground(Color.decode("#F74548"));
+        del.setFont(new Font("Serif", Font.BOLD, 18));
+        del.setBorderPainted(false);
+        del.setFocusPainted(false);
+        del.setForeground(Color.WHITE);
+        del.setUI(new StyledButtonUI());
         patientinfo.add(del);
 
         int baset = 50;
@@ -192,6 +286,7 @@ public class receptionist {
 
         String gen[]={" ","Male","Female"};        
         genderinput=new JComboBox(gen); 
+        genderinput.setBackground(Color.WHITE);
         genderinput.setRenderer(listRenderer); 
         genderinput.setBounds(90,basei + blah2*3, 125, 30);
         genderinput.setFont(new Font("Serif", Font.PLAIN, 17));
@@ -241,6 +336,7 @@ public class receptionist {
 
         String groupw[]={" ","A","B", "AB", "O"};        
         groupinput=new JComboBox(groupw);
+        groupinput.setBackground(Color.WHITE);
         groupinput.setRenderer(listRenderer); 
         groupinput.setBounds(480,basei +blah2, 125, 30);
         groupinput.setFont(new Font("Serif", Font.PLAIN, 17));
@@ -273,6 +369,7 @@ public class receptionist {
 
         String conss[]={" ","MS. SIMONS","MS. WILSON"};        
         consinput=new JComboBox(conss);
+        consinput.setBackground(Color.WHITE);
         consinput.setRenderer(listRenderer);
         
         consinput.setBounds(480,basei +blah2*4, 125, 30);
@@ -292,12 +389,22 @@ public class receptionist {
 
         JButton save = new JButton("Save");
         save.setBounds(600, 420, 105, 39);
-        save.setBackground(Color.WHITE);
+        save.setBackground(Color.decode("#0FC661"));
+        save.setFont(new Font("Serif", Font.BOLD, 18));
+        save.setBorderPainted(false);
+        save.setFocusPainted(false);
+        save.setForeground(Color.WHITE);
+        save.setUI(new StyledButtonUI());
         patientinfo.add(save);
 
         JButton prev = new JButton("Preview");
-        prev.setBounds(450, 420, 105, 39);
-        prev.setBackground(Color.WHITE);
+        prev.setBounds(470, 420, 105, 39);
+        prev.setBackground(Color.decode("#F069A9"));
+        prev.setFont(new Font("Serif", Font.BOLD, 18));
+        prev.setBorderPainted(false);
+        prev.setFocusPainted(false);
+        prev.setForeground(Color.WHITE);
+        prev.setUI(new StyledButtonUI());
         patientinfo.add(prev);
 
         ButtonListener listener = new ButtonListener();
@@ -311,16 +418,18 @@ public class receptionist {
         chart.setBounds(790, 115, 685, 470);
         chart.setBackground(Color.WHITE);
         frame.add(chart);
+        chart.setUI(new StyledPanelUI());
 
 
-        JLabel chtitle  = new JLabel("Chart Preview");
+        JLabel chtitle  = new JLabel("Information Preview");
         chtitle.setBounds(20, 0, 300, 50);
-        chtitle.setFont(new Font("Serif", Font.PLAIN, 20));
+        chtitle.setFont(new Font("Serif", Font.BOLD, 20));
         chart.add(chtitle);
 
         JPanel tpanel  = new JPanel();
-        tpanel.setBounds(50, 55, 550, 400);
+        tpanel.setBounds(65, 55, 550, 400);
         tpanel.setFont(new Font("Serif", Font.PLAIN, 20));
+        tpanel.setBackground(Color.WHITE);//change here
       
         chart.add(tpanel);
 
@@ -341,18 +450,34 @@ public class receptionist {
 
         JLabel tabletit  = new JLabel("Recent Patients");
         tabletit.setBounds(20, 0, 300, 50);
-        tabletit.setFont(new Font("Serif", Font.PLAIN, 20));
+        tabletit.setFont(new Font("Serif", Font.BOLD, 20));
         tbl2.add(tabletit);
         tbl2.add(tbl);
         String[] coloumnNames = {"ID", "Name", "Contact", "Address", "Doctor", "Date"};
         String[] item={"1","Teric Simons","3","4","5","6"};
 
-       model = new DefaultTableModel(coloumnNames, 0);
+    
+       model = new DefaultTableModel(coloumnNames, 0) {
+
+        @Override
+        public boolean isCellEditable(int row, int column) {       
+            return false; // or a condition at your choice with row and column
+        }
+     };
+     
        table = new JTable(model);
-       table.setFont(new Font("Serif", Font.PLAIN, 16));
+       table.setRowSelectionAllowed(false);
+
+
+        JTableHeader header = table.getTableHeader();
+        header.setBorder(null);
+        header.setFont(new Font("Serif", Font.BOLD, 20));
+        header.setBackground(Color.decode("#54aeef"));
+        header.setForeground(Color.WHITE);
        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
        centerRenderer.setBorder(null);
-        table.getTableHeader().setDefaultRenderer(centerRenderer);
+       table.setFont(new Font("Serif", Font.PLAIN, 16));
+     
         centerRenderer.setHorizontalAlignment( JLabel.CENTER );
         for (int columnIndex = 0; columnIndex < table.getColumnCount(); columnIndex++)
         {
@@ -361,15 +486,33 @@ public class receptionist {
         
 
         table.setShowVerticalLines(false);
+
        model.addRow(item);
        model.addRow(item);
+
+       SwingUtilities.invokeLater(() -> {
+        Map<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
+        attributes.put(TextAttribute.TRACKING, 0.03);
+
+        del.setFont(del.getFont().deriveFont(attributes));
+        admiss.setFont(del.getFont().deriveFont(attributes));
+        dailyacc.setFont(del.getFont().deriveFont(attributes));
+        feedback.setFont(del.getFont().deriveFont(attributes));
+        newb.setFont(del.getFont().deriveFont(attributes));
+        patientinfotit.setFont(del.getFont().deriveFont(attributes));
+        prev.setFont(del.getFont().deriveFont(attributes));
+        save.setFont(del.getFont().deriveFont(attributes));
+        chtitle.setFont(del.getFont().deriveFont(attributes));
+        tabletit.setFont(del.getFont().deriveFont(attributes));
+        
+    });
        table.setRowHeight(37);
        table.getTableHeader().setFont(new Font("Serif", Font.BOLD, 17));
        table.getTableHeader().setPreferredSize(new Dimension(100, 35));
        table.setPreferredScrollableViewportSize(new Dimension(1460, 250));
        table.setFillsViewportHeight(true);
        JScrollPane scrollPane = new JScrollPane(table);
-       scrollPane.setBorder(new LineBorder(null, 5));
+       scrollPane.setBorder(new LineBorder(Color.decode("#54aeef"), 5));
 
 
     
@@ -386,9 +529,10 @@ public class receptionist {
         
         titleinfo  = new JLabel("",SwingConstants.CENTER);
         titleinfo.setBounds(50, 20, 550, 380);
-        titleinfo.setFont(new Font("Monospaced", Font.ITALIC, 18));
+        titleinfo.setFont(new Font("Monospaced", Font.ITALIC, 16));
        
         tpanel.add(titleinfo);
+        tpanel.setUI(new StyledPanelUI());
         createlistframe();
         listPanelmain.setVisible(false);
 
@@ -400,6 +544,8 @@ public class receptionist {
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+
+        displaychart();
     }
 
     public void displaychart()
@@ -418,8 +564,8 @@ public class receptionist {
         String price = priceinput.getText();
         String date = dateinput.getText();
 
-        String str = "<html><br/><html><html>Patient Name: " + name +"<br/><html>Contact Information: " + contact +"<br/>Phone number:<html> " + phone + ":<html><br/>Gender::<html> " + gender;
-        str+= "<html><br/>Occupation:<html> " + occ + "<html><br/>Blood Group:<html> " + blood + "<html><br/>Religion:<html> " + religion + "<html><br/>Symptoms experiencing:<html> " + sympton +"<html><br/>Doctor Seen:<html> " + doctor;
+        String str = "<html><br/><html><html>Collaborative Care Patient System<br/><html><html><br/><html><html>Patient Name: " + name +"<br/><html>Contact Information: " + contact +"<br/>Phone number:<html> " + phone + ":<html><br/><br/>Gender::<html> " + gender;
+        str+= "<html><br/>Occupation:<html> " + occ + "<html><br/>Blood Group:<html> " + blood + "<html><br/><br/>Religion:<html> " + religion + "<html><br/>Symptoms experiencing:<html> " + sympton +"<html><br/>Doctor Seen:<html> " + doctor;
         str+="<html><br/>Amount Paid:<html> " + price + "<html><br/>Date of Appointment:<html> " + date;
         
         titleinfo.setText(str);
@@ -499,7 +645,12 @@ public class receptionist {
 
         JButton OK = new JButton("OK");
         OK.setBounds(1320, 40, 120, 35);
-        OK.setBackground(Color.WHITE);
+        OK.setBackground(Color.decode("#54aeef"));
+        OK.setFont(new Font("Serif", Font.BOLD, 18));
+        OK.setBorderPainted(false);
+        OK.setFocusPainted(false);
+        OK.setForeground(Color.WHITE);
+        OK.setUI(new StyledButtonUI());
         filterPanel.add(OK);
 
         JLabel valuee = new JLabel("Value");
@@ -510,11 +661,15 @@ public class receptionist {
 
         String group[]={" "};        
         JComboBox valueinput=new JComboBox(group);
+        valueinput.setRenderer(listRenderer); 
+        valueinput.setBackground(Color.WHITE);
         valueinput.setBounds(1170, 35, 125, 25);
         filterPanel.add(valueinput);
 
         String group2[]={" "};        
         JComboBox valueinput2=new JComboBox(group2);
+        valueinput2.setRenderer(listRenderer); 
+        valueinput2.setBackground(Color.WHITE);
         valueinput2.setBounds(1170, 65, 125, 25);
         filterPanel.add(valueinput2);
 
@@ -527,10 +682,14 @@ public class receptionist {
 
         String group3[]={" ", "=", "<", ">"};        
         JComboBox valueinput3=new JComboBox(group3);
+        valueinput3.setRenderer(listRenderer); 
+        valueinput3.setBackground(Color.WHITE);
         valueinput3.setBounds(970, 35, 125, 25);
         filterPanel.add(valueinput3);
         
         JComboBox valueinput4=new JComboBox(group3);
+        valueinput4.setRenderer(listRenderer); 
+        valueinput4.setBackground(Color.WHITE);
         valueinput4.setBounds(970, 65, 125, 25);
         filterPanel.add(valueinput4);
 
@@ -544,10 +703,14 @@ public class receptionist {
 
         String group4[]={" "};        
         JComboBox valueinput5=new JComboBox(group4);
+        valueinput5.setRenderer(listRenderer); 
+        valueinput5.setBackground(Color.WHITE);
         valueinput5.setBounds(770, 35, 125, 25);
         filterPanel.add(valueinput5);
         
         JComboBox valueinput6=new JComboBox(group4);
+        valueinput6.setRenderer(listRenderer); 
+        valueinput6.setBackground(Color.WHITE);
         valueinput6.setBounds(770, 65, 125, 25);
         filterPanel.add(valueinput6);
 
@@ -559,6 +722,9 @@ public class receptionist {
 
         String group5[]={" ", "AND", "OR"}; 
         JComboBox valueinput7=new JComboBox(group5);
+        valueinput7.setRenderer(listRenderer); 
+        valueinput7.setBackground(Color.WHITE);
+        valueinput6.setBackground(Color.WHITE);
         valueinput7.setBounds(570, 50, 125, 25);
         filterPanel.add(valueinput7);
 
@@ -567,18 +733,18 @@ public class receptionist {
 
         listPanelmain = new JPanel();
         listPanelmain.setLayout(null);
-        listPanelmain.setBounds(0, 115, 1500, 845);
+        listPanelmain.setBounds(15, 115, 1470, 845);
            String[] coloumnNames = {"#","ID", "Name", "Doctor", "Age", "Amount Paid","Payment Type", "Date"};
         
 
-        DefaultTableModel model = new DefaultTableModel(coloumnNames, 0);
-        JTable table = new JTable(model) {
-            private static final long serialVersionUID = 1L;
-    
-            public boolean isCellEditable(int row, int column) {                
-                    return false;               
-            };
-        };
+        DefaultTableModel model = new DefaultTableModel(coloumnNames, 0){
+
+            @Override
+            public boolean isCellEditable(int row, int column) {       
+                return false; // or a condition at your choice with row and column
+            }
+         };
+        JTable table = new JTable(model);
 
         table.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
@@ -590,12 +756,19 @@ public class receptionist {
             }
          });
 
-         table.setFocusable(false);
-    
-       table.setFont(new Font("Serif", Font.PLAIN, 16));
+   
+       table.setRowSelectionAllowed(false);
+
+
+        JTableHeader header = table.getTableHeader();
+        header.setBorder(null);
+        header.setFont(new Font("Serif", Font.BOLD, 20));
+        header.setBackground(Color.decode("#54aeef"));
+        header.setForeground(Color.WHITE);
        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
        centerRenderer.setBorder(null);
-        table.getTableHeader().setDefaultRenderer(centerRenderer);
+       table.setFont(new Font("Serif", Font.PLAIN, 16));
+     
         centerRenderer.setHorizontalAlignment( JLabel.CENTER );
         for (int columnIndex = 0; columnIndex < table.getColumnCount(); columnIndex++)
         {
@@ -620,11 +793,21 @@ public class receptionist {
        table.setPreferredScrollableViewportSize(new Dimension(1460, 250));
        table.setFillsViewportHeight(true);
        JScrollPane scrollPane = new JScrollPane(table);
-       scrollPane.setBorder(new LineBorder(null, 5));
+       scrollPane.setBorder(new LineBorder(Color.WHITE, 5));
        
        listPanel.add(scrollPane);
        listPanelmain.add(filterPanel);
        listPanelmain.add(listPanel);
+
+       SwingUtilities.invokeLater(() -> {
+        Map<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
+        attributes.put(TextAttribute.TRACKING, 0.03);
+
+        baseLabel.setFont(baseLabel.getFont().deriveFont(attributes));
+        filterlabel.setFont(filterlabel.getFont().deriveFont(attributes));
+        totalLabel.setFont(totalLabel.getFont().deriveFont(attributes));
+        totalLabel.setFont(totalLabel.getFont().deriveFont(attributes));
+    });
        
 
     }
@@ -652,7 +835,7 @@ public class receptionist {
     
     }
 
-    class StyledButtonUI extends BasicButtonUI {
+    class StyledButtonUI extends BasicButtonUI  {
 
         @Override
         public void installUI (JComponent c) {
@@ -676,7 +859,35 @@ public class receptionist {
             g.setColor(c.getBackground().darker());
             g.fillRoundRect(0, yOffset, size.width, size.height - yOffset, 10, 1);
             g.setColor(c.getBackground());
-            g.fillRoundRect(0, yOffset, size.width, size.height + yOffset - 5, 10, 1);
+            g.fillRoundRect(0, yOffset, size.width, size.height + yOffset - 2, 10, 1);
+        }
+    }
+
+    public class StyledPanelUI extends BasicPanelUI  {
+
+        @Override
+        public void installUI (JComponent c) {
+            super.installUI(c);
+            JPanel button = (JPanel) c;
+            button.setOpaque(false);
+            button.setBorder(new EmptyBorder(5, 15, 5, 15));
+        }
+    
+        @Override
+        public void paint (Graphics g, JComponent c) {
+            JPanel b = (JPanel) c;
+            paintBackground(g, b,0);
+            super.paint(g, c);
+        }
+    
+        private void paintBackground (Graphics g, JComponent c, int yOffset) {
+            Dimension size = c.getSize();
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g.setColor(c.getBackground().darker());
+            g.fillRoundRect(0, yOffset, size.width, size.height - yOffset, 10, 1);
+            g.setColor(c.getBackground());
+            g.fillRoundRect(0, yOffset, size.width, size.height + yOffset - 1, 10, 1);
         }
     }
     
