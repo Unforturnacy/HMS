@@ -115,6 +115,13 @@ public class receptionist {
         dailyacc.setBounds(500, 0, 250, 45);
         dailyacc.setBackground(Color.WHITE);
         upperbutton.add(dailyacc);
+
+        JButton feedback = new JButton("Submit Feedback");
+        feedback.setBounds(1299, 0, 200, 45);
+        feedback.setBackground(Color.WHITE);
+        upperbutton.add(feedback);
+
+        feedback.addActionListener(new feedButtonListener());
        
         patientinfo = new JPanel();
         patientinfo.setLayout(null);
@@ -444,6 +451,15 @@ public class receptionist {
             onmain =true;
             hideEntry();
             listPanelmain.setVisible(false);
+        }
+
+    }
+
+    private class feedButtonListener implements ActionListener
+    {
+        public void actionPerformed(ActionEvent e)
+        {
+           feedback bah = new feedback();
         }
 
     }

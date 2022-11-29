@@ -167,7 +167,7 @@ public class clientChart {
         info.add(med);
 
         JLabel med1  = new JLabel("Yes");
-        med1.setBounds(545, 140, 1500, 50);
+        med1.setBounds(645, 170, 1500, 50);
         med1.setFont(new Font("Serif", Font.PLAIN, 15));
         info.add(med1);
 
