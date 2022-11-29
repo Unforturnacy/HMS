@@ -1,6 +1,8 @@
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
+import javax.swing.plaf.basic.BasicButtonUI;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -9,10 +11,9 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-
+import java.lang.Object;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -80,6 +81,7 @@ public class receptionist {
 
         recepPanel.setLayout(null);
         recepPanel.setPreferredSize(new Dimension(1500, 890));
+        recepPanel.setBackground(Color.decode("#EFF3F6"));
 
 
 
@@ -98,8 +100,13 @@ public class receptionist {
         frame.add(upperbutton);
 
         JButton admiss = new JButton("Patient Admission");
-        admiss.setBounds(0, 0, 250, 45);
-        admiss.setBackground(Color.WHITE);
+        admiss.setBounds(0, 0, 200, 45);
+        admiss.setBackground(Color.decode("#54aeef"));
+        admiss.setFont(new Font("Serif", Font.BOLD, 18));
+        admiss.setBorderPainted(false);
+        admiss.setFocusPainted(false);
+        admiss.setForeground(Color.WHITE);
+        admiss.setUI(new StyledButtonUI());
         upperbutton.add(admiss);
 
         admiss.addActionListener(new admissButtonListener());
@@ -391,6 +398,7 @@ public class receptionist {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("Receptionist");
         frame.pack();
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 
@@ -642,6 +650,34 @@ public class receptionist {
         }
 
     
+    }
+
+    class StyledButtonUI extends BasicButtonUI {
+
+        @Override
+        public void installUI (JComponent c) {
+            super.installUI(c);
+            AbstractButton button = (AbstractButton) c;
+            button.setOpaque(false);
+            button.setBorder(new EmptyBorder(5, 15, 5, 15));
+        }
+    
+        @Override
+        public void paint (Graphics g, JComponent c) {
+            AbstractButton b = (AbstractButton) c;
+            paintBackground(g, b, b.getModel().isPressed() ? 2 : 0);
+            super.paint(g, c);
+        }
+    
+        private void paintBackground (Graphics g, JComponent c, int yOffset) {
+            Dimension size = c.getSize();
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g.setColor(c.getBackground().darker());
+            g.fillRoundRect(0, yOffset, size.width, size.height - yOffset, 10, 1);
+            g.setColor(c.getBackground());
+            g.fillRoundRect(0, yOffset, size.width, size.height + yOffset - 5, 10, 1);
+        }
     }
     
 }
