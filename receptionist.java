@@ -67,9 +67,10 @@ public class receptionist {
     private JPanel tbl2;
     private JPanel tbl;
     private JPanel listPanelmain;
+    JFrame frame;
     public receptionist()
     {
-        JFrame frame = new JFrame();
+        frame = new JFrame();
         frame.addMouseListener(new MouseListener(){
             public void mouseReleased(MouseEvent e) {
             mouseDownCompCoords = null;
@@ -112,6 +113,7 @@ public class receptionist {
         xbut.setForeground(Color.WHITE);
         xbut.setRolloverEnabled(false);
         recepPanel.add(xbut);
+        xbut.addActionListener(new CloseListener());
 
         JButton plus = new JButton(new ImageIcon("images\\+.png"));
         plus.setBounds(1430, 0, 30, 30);
@@ -129,6 +131,7 @@ public class receptionist {
         min.setFocusPainted(false);
         min.setRolloverEnabled(false);
         min.setForeground(Color.WHITE);
+        min.addActionListener(new plusListener());
         recepPanel.add(min);
    
       
@@ -932,6 +935,22 @@ public class receptionist {
             return "";
         }
      
+    }
+
+    private class CloseListener implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            //DO SOMETHING
+            System.exit(0);
+        }
+    }
+
+    private class plusListener implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            //DO SOMETHING
+            frame.setState(Frame.ICONIFIED);
+        }
     }
     
 }
