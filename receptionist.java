@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.JFormattedTextField.AbstractFormatter;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.MatteBorder;
@@ -19,9 +20,17 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.text.AttributeSet.ColorAttribute;
 
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
+
 import java.lang.Object;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -385,7 +394,19 @@ public class receptionist {
         dateinput  = new JTextField();
         dateinput.setBounds(480,basei +blah2*5, 250, 30);
         dateinput.setFont(new Font("Serif", Font.PLAIN, 17));
-        patientinfo.add(dateinput);
+      
+        UtilDateModel modell = new UtilDateModel();
+        //model.setDate(20,04,2014);
+        // Need this...
+        Properties p = new Properties();
+        p.put("text.today", "Today");
+        p.put("text.month", "Month");
+        p.put("text.year", "Year");
+        JDatePanelImpl datePanel = new JDatePanelImpl(modell, p);
+        // Don't know about the formatter, but there it is...
+        JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
+        datePicker.setBounds(480,basei +blah2*5, 250, 30);
+        patientinfo.add(datePicker);
 
         JButton save = new JButton("Save");
         save.setBounds(600, 420, 105, 39);
@@ -889,6 +910,28 @@ public class receptionist {
             g.setColor(c.getBackground());
             g.fillRoundRect(0, yOffset, size.width, size.height + yOffset - 1, 10, 1);
         }
+    }
+
+    public class DateLabelFormatter extends AbstractFormatter {
+ 
+        private String datePattern = "yyyy-MM-dd";
+        private SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
+         
+        @Override
+        public Object stringToValue(String text) throws ParseException {
+            return dateFormatter.parseObject(text);
+        }
+     
+        @Override
+        public String valueToString(Object value) throws ParseException {
+            if (value != null) {
+                Calendar cal = (Calendar) value;
+                return dateFormatter.format(cal.getTime());
+            }
+             
+            return "";
+        }
+     
     }
     
 }

@@ -2,15 +2,19 @@
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import java.sql.*;
+import java.util.logging.*;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.lang.model.util.ElementScanner14;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,7 +33,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.font.TextAttribute;
+
 public class patientEntry{
+    
+    
     private JPanel innerloginPanel;
     private JPanel innerloginPaneltitle;
     private JPanel loginPanel;
@@ -38,8 +45,10 @@ public class patientEntry{
     private JFrame frame;
     private patientEntry login;
     static Point mouseDownCompCoords;
+    public ArrayList<admin> admins = new ArrayList<admin>();
     public patientEntry()
     {
+        getadmins();
         login = this;
         final int dimx = 650;
         frame = new JFrame();
@@ -279,18 +288,84 @@ public class patientEntry{
     }
 
     public static void main(String[] args) {
+        
         new patientEntry();
+
         
     }
 
     private class ButtonListener implements ActionListener
     {
+       
         public void actionPerformed(ActionEvent e)
         {
-            login.frame.setVisible(false);
-            new receptionist();
+            boolean coruse = false;
+            boolean corpass = false;
+            userLogin userl = new userLogin( user.getText(), pass.getText());
+            boolean[] result=userl.authenticate(admins);
+           coruse = result[0];
+           corpass = result[1];
+
+           if(coruse && corpass)
+           {
+               login.frame.setVisible(false);
+               new receptionist();
+           }
+           else
+
+            if(!coruse)
+            {
+                user.setText("INCORRECT USERNAME");
+                coruse = false;
+            }
+            else
+            {
+                pass.setText("INCORRECT PASSWORD");
+                corpass = false;
+            }
+
         }
 
+    }
+
+    public void getadmins()
+    {
+        Statement sqlSt;
+        String output = "";
+        ResultSet result;
+        String SQL = "SELECT * from admins";
+
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            String dbURL = "jdbc:mysql://localhost:3306/hospital";
+            Connection dbConnect =  DriverManager.getConnection(dbURL, "root", "");
+            sqlSt = dbConnect.createStatement();//allows SQL to be executed
+            result = sqlSt.executeQuery(SQL);
+            while(result.next() != false)
+            {
+                int id = Integer.parseInt(result.getString(1));
+                String fname = result.getString(2);
+                String lname= result.getString(3);
+                String user= result.getString(4);
+                String pass= result.getString(5);
+                String email= result.getString(6);
+                String pos= result.getString(7);
+                String tele= result.getString(8);
+                admins.add(new admin(id, fname, lname, user, pass, email, pos, tele));   
+            }
+
+            sqlSt.close();
+
+            System.out.println(output);
+
+
+        }
+        catch(ClassNotFoundException ex){
+            System.out.println("DIDNT LOAD JAR");
+        }
+        catch (SQLException ex){
+            System.out.println("SQL IS BAD" +ex.getMessage());
+        }
     }
 
 
