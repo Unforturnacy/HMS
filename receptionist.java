@@ -671,7 +671,7 @@ public class receptionist {
         String religion = relinput.getText();
         String doctor = String.valueOf(consinput.getSelectedItem());
         String price = priceinput.getText();
-        String date = datePicker.getModel().getMonth()+"/"+ datePicker.getModel().getDay()+"/"+ datePicker.getModel().getYear();
+        String date = datePicker.getModel().getMonth()+1+"/"+ datePicker.getModel().getDay()+"/"+ datePicker.getModel().getYear();
 
         String str = "<html><br/><html><html>Collaborative Care Patient System<br/><html><html><br/><html><html>Patient Name: " + name +"<br/><html>Contact Information: " + contact +"<br/>Phone number:<html> " + phone + ":<html><br/><br/>Gender::<html> " + gender;
         str+= "<html><br/>Occupation:<html> " + occ + "<html><br/>Blood Group:<html> " + blood + "<html><br/><br/>Address:<html> " + religion + "<html><br/>Symptoms experiencing:<html> " + sympton +"<html><br/>Doctor Seen:<html> " + doctor;
@@ -869,7 +869,7 @@ public class receptionist {
         field.setBackground(Color.BLUE);
         filterPanel.add(field);
 
-        String group4[]={"","Name","Doctor","Blood Group","Amount Paid","Gender"};        
+        String group4[]={" ","Name","Doctor","Blood Group","Amount Paid","Gender"};        
         valueinput5=new JComboBox(group4);
         valueinput5.setRenderer(listRenderer); 
         valueinput5.setBackground(Color.WHITE);
@@ -1193,7 +1193,7 @@ public class receptionist {
         String religion = relinput.getText();
         String doctor = String.valueOf(consinput.getSelectedItem());
         double price =Double.parseDouble(priceinput.getText());
-        String date = datePicker.getModel().getMonth()+"/"+ datePicker.getModel().getDay()+"/"+ datePicker.getModel().getYear();
+        String date = datePicker.getModel().getMonth()+1+"/"+ datePicker.getModel().getDay()+"/"+ datePicker.getModel().getYear();
  
 
         
@@ -1246,7 +1246,7 @@ public class receptionist {
         String religion = relinput.getText();
         String doctor = String.valueOf(consinput.getSelectedItem());
         double price =Double.parseDouble(priceinput.getText());
-        String date = datePicker.getModel().getMonth()+"/"+ datePicker.getModel().getDay()+"/"+ datePicker.getModel().getYear();
+        String date = datePicker.getModel().getMonth()+1+"/"+ datePicker.getModel().getDay()+"/"+ datePicker.getModel().getYear();
 
         //function here
         database db = new database(name, occ, contact, gender, phone,  sympton, blood, religion, doctor, price, date);
@@ -1264,7 +1264,14 @@ public class receptionist {
             boolean flag = true;
             //DO SOMETHING
             if (valueinput3.getSelectedIndex() == 0){
-                JOptionPane.showMessageDialog(f, "Select a condition");
+                if(valueinput5.getSelectedIndex() == 0 && (valueinput.getText().isEmpty() || valueinput.getText()==null))
+                {
+                    updateTable2();
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(f, "Select a condition");
+                }
                 flag =false;
 
             }
