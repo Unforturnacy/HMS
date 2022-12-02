@@ -52,6 +52,10 @@ public class database {
     private double price;
     private String date;
     private String doctor;
+    private String field;
+    private String operator;
+    private String value;
+    public ArrayList<patient> patients = new ArrayList<patient>();
 
     public database(String name,String email,String response)
     {
@@ -75,6 +79,14 @@ public class database {
         this.price = paid;
         this.date = date;
         insert_patient();
+    }
+
+    public database(String field,String operator,String value,ArrayList<patient> patients)
+    {
+        this.field = field;
+        this.operator = operator;
+        this.value = value;
+        this.patients = patients;
     }
 
 
@@ -144,6 +156,98 @@ public class database {
         catch (SQLException ex){
             System.out.println("SQL IS BAD" +ex.getMessage());
         }
+    }
+
+    public ArrayList<patient> filter_query(){
+        ArrayList<patient> newpatients = new ArrayList<patient>();
+        if(field.equals("Name"))
+        {
+            for(patient pat : patients)
+            {
+                if(pat.getname().equals(value))
+                {
+                    newpatients.add( pat);
+                }
+            }
+        }
+        else if(field.equals("Doctor"))
+        {
+            for(patient pat : patients)
+            {
+                if(pat.get_docseen().equals(value))
+                {
+                    newpatients.add( pat);
+                }
+            }
+        }
+
+        else if(field.equals("Blood Group"))
+        {
+            for(patient pat : patients)
+            {
+                if(pat.get_group().equals(value))
+                {
+                    newpatients.add( pat);
+                }
+            }
+        }
+        else if(field.equals("Gender"))
+        {
+            for(patient pat : patients)
+            {
+                if(pat.getgender().equals(value))
+                {
+                    newpatients.add( pat);
+                }
+            }
+        }
+        else
+        {
+             try
+                {
+                    Double.parseDouble(value);
+                }
+                catch (Exception e)
+                {
+                    return newpatients;
+                }
+            if(operator.equals("="))
+            {
+                for(patient pat : patients)
+                {
+                
+                    if(pat.get_Paid() == Double.parseDouble(value))
+                    {
+                        newpatients.add( pat);
+                    }
+                }
+            }
+            else if(operator.equals(">"))
+            {
+                for(patient pat : patients)
+                {
+                
+                    if(pat.get_Paid() > Double.parseDouble(value))
+                    {
+                        newpatients.add( pat);
+                    }
+                }
+
+            }
+            else
+            {
+                for(patient pat : patients)
+                {
+                
+                    if(pat.get_Paid() < Double.parseDouble(value))
+                    {
+                        newpatients.add( pat);
+                    }
+                }
+            }
+        }
+
+        return newpatients;
     }
     
 }

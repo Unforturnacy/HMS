@@ -95,7 +95,8 @@ public class patient {
         
         String[] arrOfStr = this.symp.split(",");
         
-       
+
+    
 
         return arrOfStr;
     }

@@ -88,6 +88,7 @@ public class receptionist {
     private JComboBox genderinput;
     private JTextField phoneinput; 
     private JTextField symptomsinput;
+    private  JComboBox valueinput5;
     private JTextField occinput;
     private JComboBox groupinput;
     private JTextField relinput ;
@@ -97,6 +98,8 @@ public class receptionist {
     private JDatePickerImpl datePicker;
     private JLabel titleinfo;
     private JTable table;
+    private JComboBox valueinput3;
+    private JTextField valueinput;
     private DefaultTableModel model;
     private DefaultTableModel model2;
     private int please;
@@ -731,6 +734,25 @@ public class receptionist {
     }
 
 
+
+    public void  filterupdateTable2(ArrayList<patient> pat)
+    {
+        
+
+        model2.setRowCount(0);
+            for(int i = 0 ; i <pat.size();i++)
+            {
+                if (pat.size()>0)
+                    addToTable2(pat.get(i));
+    
+            }
+    }
+
+
+
+    
+
+
     private class ButtonListener implements ActionListener
     {
         public void actionPerformed(ActionEvent e)
@@ -789,7 +811,7 @@ public class receptionist {
         filterPanel.setBackground(Color.white);
 
         JLabel filterlabel = new JLabel("Filter:");
-        filterlabel.setBounds(450, 40, 125, 40);
+        filterlabel.setBounds(600, 40, 125, 40);
         filterlabel.setFont(new Font("Serif", Font.PLAIN, 40));
         filterPanel.add(filterlabel);
 
@@ -817,16 +839,12 @@ public class receptionist {
         filterPanel.add(valuee);
 
       
-        JTextField valueinput=new JTextField();
+        valueinput=new JTextField();
         valueinput.setBackground(Color.WHITE);
-        valueinput.setBounds(1170, 35, 125, 25);
+        valueinput.setBounds(1170, 50, 125, 25);
         filterPanel.add(valueinput);
 
-        JTextField valueinput2=new JTextField();
-        valueinput2.setBackground(Color.WHITE);
-        valueinput2.setBounds(1170, 65, 125, 25);
-        filterPanel.add(valueinput2);
-
+   
 
         JLabel con = new JLabel("Condition");
         con.setBounds(1000, 5, 125, 40);
@@ -835,17 +853,13 @@ public class receptionist {
         filterPanel.add(con);
 
         String group3[]={" ", "=", "<", ">"};        
-        JComboBox valueinput3=new JComboBox(group3);
+        valueinput3=new JComboBox(group3);
         valueinput3.setRenderer(listRenderer); 
         valueinput3.setBackground(Color.WHITE);
-        valueinput3.setBounds(970, 35, 125, 25);
+        valueinput3.setBounds(970, 50, 125, 25);
         filterPanel.add(valueinput3);
         
-        JComboBox valueinput4=new JComboBox(group3);
-        valueinput4.setRenderer(listRenderer); 
-        valueinput4.setBackground(Color.WHITE);
-        valueinput4.setBounds(970, 65, 125, 25);
-        filterPanel.add(valueinput4);
+  
 
      
 
@@ -856,31 +870,35 @@ public class receptionist {
         filterPanel.add(field);
 
         String group4[]={"","Name","Doctor","Blood Group","Amount Paid","Gender"};        
-        JComboBox valueinput5=new JComboBox(group4);
+        valueinput5=new JComboBox(group4);
         valueinput5.setRenderer(listRenderer); 
         valueinput5.setBackground(Color.WHITE);
-        valueinput5.setBounds(770, 35, 125, 25);
+        valueinput5.setBounds(770, 50, 125, 25);
         filterPanel.add(valueinput5);
+
+    
+
+       
         
-        JComboBox valueinput6=new JComboBox(group4);
-        valueinput6.setRenderer(listRenderer); 
-        valueinput6.setBackground(Color.WHITE);
-        valueinput6.setBounds(770, 65, 125, 25);
-        filterPanel.add(valueinput6);
+    
 
         JLabel operator = new JLabel("Operator");
         operator.setBounds(600, 5, 125, 40);
         operator.setFont(new Font("Serif", Font.PLAIN, 17));
         operator.setBackground(Color.BLUE);
-        filterPanel.add(operator);
+
+
+    
 
         String group5[]={" ", "AND", "OR"}; 
         JComboBox valueinput7=new JComboBox(group5);
         valueinput7.setRenderer(listRenderer); 
         valueinput7.setBackground(Color.WHITE);
-        valueinput6.setBackground(Color.WHITE);
+
+      
+      
         valueinput7.setBounds(570, 50, 125, 25);
-        filterPanel.add(valueinput7);
+   
 
 
 
@@ -1083,6 +1101,15 @@ public class receptionist {
         @Override
         public void actionPerformed(ActionEvent e) {
             JFrame f = new JFrame();
+            boolean isint = true;
+
+            try{
+                Double.parseDouble(priceinput.getText());
+
+            } catch(Exception d)
+            {
+                isint = false;
+            }
             if((nameinput.getText().isEmpty()) || (nameinput.getText() == null))
             {
                 JOptionPane.showMessageDialog(f, "Name cannot be empty");
@@ -1128,19 +1155,23 @@ public class receptionist {
             {
                 JOptionPane.showMessageDialog(f, "Choose a doctor");
             }
+            else if(!isint)
+            {
+                JOptionPane.showMessageDialog(f, "Price must be Integer"); 
+            }
             else
             {
                 if(update)
                 {
                     updatePatient(please);
                     update = false;
-                    JOptionPane.showMessageDialog(f, "Update Succesful");
+                    JOptionPane.showMessageDialog(f, "Update successful");
                 }
                 else
                 {
                     savePatient();
                     iDinput.setText(Integer.toString(entry.getlastID()+1));
-                    JOptionPane.showMessageDialog(f, "Save Succesful");
+                    JOptionPane.showMessageDialog(f, "Save successful");
                 }
             }
 
@@ -1229,8 +1260,37 @@ public class receptionist {
     private class filtListener implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
+            JFrame f = new JFrame();
+            boolean flag = true;
             //DO SOMETHING
-            System.exit(0);
+            if (valueinput3.getSelectedIndex() == 0){
+                JOptionPane.showMessageDialog(f, "Select a condition");
+                flag =false;
+
+            }
+            else if(valueinput5.getSelectedIndex() == 0)
+            {
+                JOptionPane.showMessageDialog(f, "Select a field");
+                flag=false;
+            }
+
+            if ((String.valueOf(valueinput5.getSelectedItem()).equals("Name") ||String.valueOf(valueinput5.getSelectedItem()).equals("Doctor") ||String.valueOf(valueinput5.getSelectedItem()).equals("Blood Group")||String.valueOf(valueinput5.getSelectedItem()).equals("Gender")) && !String.valueOf(valueinput3.getSelectedItem()).equals("="))
+                {
+                    JOptionPane.showMessageDialog(f, "Can only use = on this field");
+                    flag= false;
+                }
+
+            if(flag){
+                database db = new database(String.valueOf(valueinput5.getSelectedItem()) ,String.valueOf(valueinput3.getSelectedItem()),valueinput.getText(),entry.patients);
+                if(db.filter_query().size() > 0)
+                {
+                    filterupdateTable2(db.filter_query());
+                }
+                else{
+                    JOptionPane.showMessageDialog(f, "No data found");
+                }
+            }
+            
         }
     }
 
