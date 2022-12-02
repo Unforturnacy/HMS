@@ -931,7 +931,7 @@ public class receptionist {
 
         table3.setShowVerticalLines(false);
         table3.getColumnModel().getColumn(0).setPreferredWidth(1);
-        JLabel totalLabel = new JLabel("Total:"+Integer.toString(60));
+        JLabel totalLabel = new JLabel("Total:"+Integer.toString(entry.patients.size()));
         totalLabel.setBounds(100, 62, 100, 40);
         totalLabel.setFont(new Font("Serif", Font.CENTER_BASELINE, 20));
         filterPanel.add(totalLabel);
