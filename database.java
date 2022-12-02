@@ -81,7 +81,7 @@ public class database {
     public void insert_query()
     {
         Statement sqlSt;
-        String SQL = "insert into feedback (name, email, response)" + " values (?, ?, ?)";
+        String SQL = "insert into feedback (name, email, feedback)" + " values (?, ?, ?)";
      
         System.out.println(SQL);
 
