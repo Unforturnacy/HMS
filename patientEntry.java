@@ -405,7 +405,6 @@ public class patientEntry{
                  double paid=  Double.parseDouble(result.getString(11));
                  String date=result.getString(12);
 
-
                 
                 patients.add(new patient(id, name, occupation, email, gender, tele, symp, blood, add, docseen, paid, date));
                 revpatients.add(new patient(id, name, occupation, email, gender, tele, symp, blood, add, docseen, paid, date));

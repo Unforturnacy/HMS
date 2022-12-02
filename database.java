@@ -105,6 +105,8 @@ public class database {
         }
     }
 
+
+    //rasheeda
     public void insert_patient()
     {
         Statement sqlSt;
@@ -113,9 +115,13 @@ public class database {
         System.out.println(SQL);
 
         try{
+
+            //opening a connection to the database
             Class.forName("com.mysql.cj.jdbc.Driver");
             String dbURL = "jdbc:mysql://localhost:3306/hospital";
             Connection dbConnect =  DriverManager.getConnection(dbURL, "root", "");
+
+
             sqlSt = dbConnect.createStatement();//allows SQL to be executed
             PreparedStatement preparedStmt = dbConnect.prepareStatement(SQL);
             preparedStmt.setString (1, name);
@@ -129,7 +135,7 @@ public class database {
             preparedStmt.setString    (9, doctor);
             preparedStmt.setDouble(10, price);
             preparedStmt.setString    (11, date);
-            preparedStmt.execute();
+            preparedStmt.execute();//magic
             sqlSt.close();
         }
         catch(ClassNotFoundException ex){

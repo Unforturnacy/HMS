@@ -180,10 +180,19 @@ public class feedback extends JFrame implements ActionListener{
                 String s2= "Name: "+tname.getText()+"\nEmail: "+tmail.getText()+"\n"+"\nFeedback: "+tfeedback.getText();
                 String disp=s1+s2;
                 JOptionPane.showMessageDialog(f, disp);
-                database db = new database(tname.getText(),tmail.getText(), tfeedback.getText());
+                database db = new database(tname.getText(),tmail.getText(), tfeedback.getText());//uploading to database
                 feed.setVisible(false);
             }
             
+        }
+
+        else
+        {
+            tname.setText("");
+            tmail.setText("");
+            tfeedback.setText("");
+
+
         }
 
 
