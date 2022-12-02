@@ -1,3 +1,4 @@
+import javax.lang.model.util.ElementScanner14;
 import javax.swing.*;
 import javax.swing.JFormattedTextField.AbstractFormatter;
 import javax.swing.border.EmptyBorder;
@@ -27,7 +28,9 @@ import org.jdatepicker.impl.UtilDateModel;
 import java.lang.Object;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -38,10 +41,46 @@ import java.awt.GridLayout;
 import java.awt.font.*;
 import java.awt.Font;
 
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import java.sql.*;
+import java.util.logging.*;
+import javax.swing.JEditorPane;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.lang.model.util.ElementScanner14;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.swing.JPanel;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.font.TextAttribute;
+
 public class receptionist {
     private JPanel recepPanel;
     static Point mouseDownCompCoords;
     private JPanel upperbutton;
+    private JTable table3;
     private DefaultListCellRenderer listRenderer;
     private  JTextField iDinput;
     private JTextField nameinput;
@@ -55,11 +94,15 @@ public class receptionist {
     private JComboBox consinput;
     private JTextField priceinput;
     private JTextField dateinput;
+    private JDatePickerImpl datePicker;
     private JLabel titleinfo;
     private JTable table;
     private DefaultTableModel model;
+    private DefaultTableModel model2;
+    private int please;
     private JPanel listPanel;
     private boolean onmain = true;
+    private JLabel contact;
 
 
     private JPanel patientinfo;
@@ -67,9 +110,14 @@ public class receptionist {
     private JPanel tbl2;
     private JPanel tbl;
     private JPanel listPanelmain;
+    private patientEntry entry;
+    private boolean update = false;
+    receptionist rec;
     JFrame frame;
-    public receptionist()
+    public receptionist(patientEntry entry)
     {
+        this.entry  = entry;
+        this.rec = this;
         frame = new JFrame();
         frame.addMouseListener(new MouseListener(){
             public void mouseReleased(MouseEvent e) {
@@ -269,8 +317,11 @@ public class receptionist {
         iDinput  = new JTextField();
         iDinput.setBounds(90,basei, 250, 30);
         iDinput.setFont(new Font("Serif", Font.PLAIN, 17));
+        iDinput.setText(Integer.toString(entry.getlastID()+1));
+        iDinput.setEnabled(false);
         patientinfo.add(iDinput);
 
+        
         JLabel name  = new JLabel("Name:");
         name.setBounds(40, baset+blah, 300, 50);
         name.setFont(new Font("Serif", Font.PLAIN, 17));
@@ -281,7 +332,9 @@ public class receptionist {
         nameinput.setFont(new Font("Serif", Font.PLAIN, 17));
         patientinfo.add(nameinput);
 
-        JLabel contact  = new JLabel("Email:");
+       
+
+        contact  = new JLabel("Email:");
         contact.setBounds(40, baset+blah*2, 300, 50);
         contact.setFont(new Font("Serif", Font.PLAIN, 17));
         patientinfo.add(contact);
@@ -354,7 +407,7 @@ public class receptionist {
         groupinput.setFont(new Font("Serif", Font.PLAIN, 17));
         patientinfo.add(groupinput);
 
-        JLabel rel  = new JLabel("Religion:");
+        JLabel rel  = new JLabel("Address:");
         rel.setBounds(410, baset + blah*2, 300, 50);
         rel.setFont(new Font("Serif", Font.PLAIN, 17));
         patientinfo.add(rel);
@@ -374,7 +427,7 @@ public class receptionist {
         priceinput.setFont(new Font("Serif", Font.PLAIN, 17));
         patientinfo.add(priceinput);
 
-        JLabel cons  = new JLabel("Consultant:");
+        JLabel cons  = new JLabel("Doctor:");
         cons.setBounds(395, baset + blah*4, 300, 50);
         cons.setFont(new Font("Serif", Font.PLAIN, 17));
         patientinfo.add(cons);
@@ -407,9 +460,38 @@ public class receptionist {
         p.put("text.year", "Year");
         JDatePanelImpl datePanel = new JDatePanelImpl(modell, p);
         // Don't know about the formatter, but there it is...
-        JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
+        datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
         datePicker.setBounds(480,basei +blah2*5, 250, 30);
         patientinfo.add(datePicker);
+
+        nameinput.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                 
+    
+            }
+            @Override
+            public void focusLost(FocusEvent e) {
+                for(patient pat:entry.patients)
+                {
+                    if (pat.getname().equals(nameinput.getText()))
+                    {
+                    
+                        contactinput.setText(pat.email());
+                        genderinput.setSelectedItem(pat.getgender());
+                        phoneinput.setText(pat.get_tele());
+                        symptomsinput.setText(pat.get_symm());
+                        occinput.setText(pat.getoc());
+                        groupinput.setSelectedItem(pat.get_group());
+                        relinput.setText(pat.get_address());
+                        consinput.setSelectedItem(pat.get_docseen());
+                        priceinput.setText(Double.toString(pat.get_Paid()));
+                        update = true;
+                        please = pat.getid();
+                    }
+                }
+            }
+        });
 
         JButton save = new JButton("Save");
         save.setBounds(600, 420, 105, 39);
@@ -419,6 +501,7 @@ public class receptionist {
         save.setFocusPainted(false);
         save.setForeground(Color.WHITE);
         save.setUI(new StyledButtonUI());
+        save.addActionListener(new saveListener());
         patientinfo.add(save);
 
         JButton prev = new JButton("Preview");
@@ -511,8 +594,7 @@ public class receptionist {
 
         table.setShowVerticalLines(false);
 
-       model.addRow(item);
-       model.addRow(item);
+        updateTable(table);
 
        SwingUtilities.invokeLater(() -> {
         Map<TextAttribute, Object> attributes = new HashMap<TextAttribute, Object>();
@@ -586,10 +668,10 @@ public class receptionist {
         String religion = relinput.getText();
         String doctor = String.valueOf(consinput.getSelectedItem());
         String price = priceinput.getText();
-        String date = dateinput.getText();
+        String date = datePicker.getModel().getMonth()+"/"+ datePicker.getModel().getDay()+"/"+ datePicker.getModel().getYear();
 
         String str = "<html><br/><html><html>Collaborative Care Patient System<br/><html><html><br/><html><html>Patient Name: " + name +"<br/><html>Contact Information: " + contact +"<br/>Phone number:<html> " + phone + ":<html><br/><br/>Gender::<html> " + gender;
-        str+= "<html><br/>Occupation:<html> " + occ + "<html><br/>Blood Group:<html> " + blood + "<html><br/><br/>Religion:<html> " + religion + "<html><br/>Symptoms experiencing:<html> " + sympton +"<html><br/>Doctor Seen:<html> " + doctor;
+        str+= "<html><br/>Occupation:<html> " + occ + "<html><br/>Blood Group:<html> " + blood + "<html><br/><br/>Address:<html> " + religion + "<html><br/>Symptoms experiencing:<html> " + sympton +"<html><br/>Doctor Seen:<html> " + doctor;
         str+="<html><br/>Amount Paid:<html> " + price + "<html><br/>Date of Appointment:<html> " + date;
         
         titleinfo.setText(str);
@@ -599,6 +681,55 @@ public class receptionist {
         System.out.println(iDinput.getText());
 
     }
+
+    private void addToTable(patient p)
+    {
+        String name= p.getname();
+        System.out.println(p.get_Date());
+        String[] item={Integer.toString(p.getid()),""+ name, ""+ p.get_tele(),""+p.get_address(),""+p.get_docseen(),""+p.get_Date()};
+        model.addRow(item);        
+
+    }
+
+    private void addToTable2(patient p)
+    {
+        String name= p.getname();
+        System.out.println(p.get_Date());
+        String[] item={Integer.toString(p.getid()),""+ name, ""+ p.get_docseen(),""+p.get_group(),""+p.get_Paid(),""+p.getgender(),""+p.get_Date()};
+        model2.addRow(item);        
+
+    }
+
+    public void  updateTable(JTable table)
+    {
+
+        model.setRowCount(0);
+            for(int i = 0 ; i <entry.revpatients.size();i++)
+            {
+                if (entry.revpatients.size()>0)
+                    addToTable(entry.revpatients.get(i));
+                
+                    if(i == 9)
+                    {
+                        break;
+                    }
+    
+            }
+    }
+
+    public void  updateTable2()
+    {
+        
+
+        model2.setRowCount(0);
+            for(int i = 0 ; i <entry.patients.size();i++)
+            {
+                if (entry.patients.size()>0)
+                    addToTable2(entry.patients.get(i));
+    
+            }
+    }
+
 
     private class ButtonListener implements ActionListener
     {
@@ -615,6 +746,7 @@ public class receptionist {
         {
             //hideEntry();
             onmain =false;
+            updateTable2();
             hideEntry();
             listPanelmain.setVisible(true);
         }
@@ -675,6 +807,7 @@ public class receptionist {
         OK.setFocusPainted(false);
         OK.setForeground(Color.WHITE);
         OK.setUI(new StyledButtonUI());
+        OK.addActionListener(new filtListener());
         filterPanel.add(OK);
 
         JLabel valuee = new JLabel("Value");
@@ -683,16 +816,13 @@ public class receptionist {
         valuee.setFont(new Font("Serif", Font.PLAIN, 17));
         filterPanel.add(valuee);
 
-        String group[]={" "};        
-        JComboBox valueinput=new JComboBox(group);
-        valueinput.setRenderer(listRenderer); 
+      
+        JTextField valueinput=new JTextField();
         valueinput.setBackground(Color.WHITE);
         valueinput.setBounds(1170, 35, 125, 25);
         filterPanel.add(valueinput);
 
-        String group2[]={" "};        
-        JComboBox valueinput2=new JComboBox(group2);
-        valueinput2.setRenderer(listRenderer); 
+        JTextField valueinput2=new JTextField();
         valueinput2.setBackground(Color.WHITE);
         valueinput2.setBounds(1170, 65, 125, 25);
         filterPanel.add(valueinput2);
@@ -725,7 +855,7 @@ public class receptionist {
         field.setBackground(Color.BLUE);
         filterPanel.add(field);
 
-        String group4[]={" "};        
+        String group4[]={"","Name","Doctor","Blood Group","Amount Paid","Gender"};        
         JComboBox valueinput5=new JComboBox(group4);
         valueinput5.setRenderer(listRenderer); 
         valueinput5.setBackground(Color.WHITE);
@@ -758,19 +888,18 @@ public class receptionist {
         listPanelmain = new JPanel();
         listPanelmain.setLayout(null);
         listPanelmain.setBounds(15, 115, 1470, 845);
-           String[] coloumnNames = {"#","ID", "Name", "Doctor", "Age", "Amount Paid","Payment Type", "Date"};
         
-
-        DefaultTableModel model = new DefaultTableModel(coloumnNames, 0){
+           String[] coloumnNames = {"ID", "Name", "Doctor", "Blood Group", "Amount Paid","Gender", "Date"};
+            model2 = new DefaultTableModel(coloumnNames, 0){
 
             @Override
             public boolean isCellEditable(int row, int column) {       
                 return false; // or a condition at your choice with row and column
             }
          };
-        JTable table = new JTable(model);
+        table3 = new JTable(model2);
 
-        table.addMouseListener(new MouseAdapter() {
+        table3.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent me) {
                if (me.getClickCount() == 2) {     // to detect doble click events
                   JTable target = (JTable)me.getSource();
@@ -781,42 +910,38 @@ public class receptionist {
          });
 
    
-       table.setRowSelectionAllowed(false);
+         table3.setRowSelectionAllowed(false);
 
 
-        JTableHeader header = table.getTableHeader();
+        JTableHeader header = table3.getTableHeader();
         header.setBorder(null);
         header.setFont(new Font("Serif", Font.BOLD, 20));
         header.setBackground(Color.decode("#54aeef"));
         header.setForeground(Color.WHITE);
        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
        centerRenderer.setBorder(null);
-       table.setFont(new Font("Serif", Font.PLAIN, 16));
+       table3.setFont(new Font("Serif", Font.PLAIN, 16));
      
         centerRenderer.setHorizontalAlignment( JLabel.CENTER );
-        for (int columnIndex = 0; columnIndex < table.getColumnCount(); columnIndex++)
+        for (int columnIndex = 0; columnIndex < table3.getColumnCount(); columnIndex++)
         {
-            table.getColumnModel().getColumn(columnIndex).setCellRenderer(centerRenderer);
+            table3.getColumnModel().getColumn(columnIndex).setCellRenderer(centerRenderer);
         }
         
 
-        table.setShowVerticalLines(false);
-        for(int i =0;i <60 ; i++)
-        {
-            model.addRow(new String[]{Integer.toString(i+1),"Teric Simons","3","4","5","6"});
-        }
-        table.getColumnModel().getColumn(0).setPreferredWidth(1);
+        table3.setShowVerticalLines(false);
+        table3.getColumnModel().getColumn(0).setPreferredWidth(1);
         JLabel totalLabel = new JLabel("Total:"+Integer.toString(60));
         totalLabel.setBounds(100, 62, 100, 40);
         totalLabel.setFont(new Font("Serif", Font.CENTER_BASELINE, 20));
         filterPanel.add(totalLabel);
    
-       table.setRowHeight(37);
-       table.getTableHeader().setFont(new Font("Serif", Font.BOLD, 17));
-       table.getTableHeader().setPreferredSize(new Dimension(100, 35));
-       table.setPreferredScrollableViewportSize(new Dimension(1460, 250));
-       table.setFillsViewportHeight(true);
-       JScrollPane scrollPane = new JScrollPane(table);
+        table3.setRowHeight(37);
+        table3.getTableHeader().setFont(new Font("Serif", Font.BOLD, 17));
+        table3.getTableHeader().setPreferredSize(new Dimension(100, 35));
+        table3.setPreferredScrollableViewportSize(new Dimension(1460, 250));
+        table3.setFillsViewportHeight(true);
+       JScrollPane scrollPane = new JScrollPane(table3);
        scrollPane.setBorder(new LineBorder(Color.WHITE, 5));
        
        listPanel.add(scrollPane);
@@ -838,7 +963,8 @@ public class receptionist {
 
     public void createChart(int row)
     {
-        new clientChart();
+        System.out.println(row);
+        new clientChart(entry,rec,row);
     }
 
     public void hideEntry()
@@ -952,5 +1078,163 @@ public class receptionist {
             frame.setState(Frame.ICONIFIED);
         }
     }
-    
+
+    private class saveListener implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            JFrame f = new JFrame();
+            if((nameinput.getText().isEmpty()) || (nameinput.getText() == null))
+            {
+                JOptionPane.showMessageDialog(f, "Name cannot be empty");
+            }
+            else if((contactinput.getText().isEmpty()) || (contactinput.getText() == null))
+            {
+                JOptionPane.showMessageDialog(f, "Email cannot be empty");
+            }
+            else if(String.valueOf(genderinput.getSelectedItem()).isEmpty())
+            {
+                JOptionPane.showMessageDialog(f, "Please select a Gender");
+            }
+            else if((phoneinput.getText().isEmpty()) || (phoneinput.getText() == null))
+            {
+                JOptionPane.showMessageDialog(f, "Please Enter a valid Phone Number");
+            }
+
+            else if((symptomsinput.getText().isEmpty()) || (symptomsinput.getText() == null))
+            {
+                JOptionPane.showMessageDialog(f, "Patient must be experiencing something");
+            }
+
+            else if((occinput.getText().isEmpty()) || (occinput.getText() == null))
+            {
+                JOptionPane.showMessageDialog(f, "Enter an occupation");
+            }
+
+            else if(String.valueOf(groupinput.getSelectedItem()).isEmpty())
+            {
+                JOptionPane.showMessageDialog(f, "Please select a valid blood group");
+            }
+
+            else if((relinput.getText().isEmpty()) || (relinput.getText() == null))
+            {
+                JOptionPane.showMessageDialog(f, "Enter an Address");
+            }
+            else if((priceinput.getText().isEmpty()) || (priceinput.getText() == null))
+            {
+                JOptionPane.showMessageDialog(f, "Please enter a price");
+            }
+
+            else if(String.valueOf(consinput.getSelectedItem()).isEmpty())
+            {
+                JOptionPane.showMessageDialog(f, "Choose a doctor");
+            }
+            else
+            {
+                if(update)
+                {
+                    updatePatient(please);
+                    update = false;
+                    JOptionPane.showMessageDialog(f, "Update Succesful");
+                }
+                else
+                {
+                    savePatient();
+                    iDinput.setText(Integer.toString(entry.getlastID()+1));
+                    JOptionPane.showMessageDialog(f, "Save Succesful");
+                }
+            }
+
+        }
+    }
+
+    public void updatePatient(int please)
+    {
+        Statement sqlSt;
+        String output = "";
+        int result;
+        String name = nameinput.getText();
+        String contact = contactinput.getText();
+        String gender = String.valueOf(genderinput.getSelectedItem());
+        String phone = phoneinput.getText();
+        String sympton = symptomsinput.getText();
+        String occ = occinput.getText();
+        String blood = String.valueOf(groupinput.getSelectedItem());
+        String religion = relinput.getText();
+        String doctor = String.valueOf(consinput.getSelectedItem());
+        double price =Double.parseDouble(priceinput.getText());
+        String date = datePicker.getModel().getMonth()+"/"+ datePicker.getModel().getDay()+"/"+ datePicker.getModel().getYear();
+ 
+
+        
+        String SQL = "UPDATE patients SET name = ?, occupation = ?, email = ?, gender = ?, telephone = ?, symptoms = ?, blood = ?, address = ?, doctor_seen = ?, amount_paid = ?, app_date = ? WHERE patients.id = ?";
+        System.out.println(SQL);
+
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            String dbURL = "jdbc:mysql://localhost:3306/hospital";
+            Connection dbConnect =  DriverManager.getConnection(dbURL, "root", "");
+            sqlSt = dbConnect.createStatement();//allows SQL to be executed
+            PreparedStatement preparedStmt = dbConnect.prepareStatement(SQL);
+            preparedStmt.setString (1, name);
+            preparedStmt.setString (2, occ);
+            preparedStmt.setString (3, contact);
+            preparedStmt.setString(4, gender);
+            preparedStmt.setString    (5, phone);
+            preparedStmt.setString    (6, sympton);
+            preparedStmt.setString    (7, blood);
+            preparedStmt.setString    (8, religion);
+            preparedStmt.setString    (9, doctor);
+            preparedStmt.setDouble(10, price);
+            preparedStmt.setString    (11, date);
+            preparedStmt.setString    (12, Integer.toString(please));
+            preparedStmt.execute();
+            sqlSt.close();
+           entry.getPatients();
+           updateTable(table);
+        }
+        catch(ClassNotFoundException ex){
+            System.out.println("DIDNT LOAD JAR");
+        }
+        catch (SQLException ex){
+            System.out.println("SQL IS BAD" +ex.getMessage());
+        }
+    }
+
+    public void savePatient()
+    {
+        Statement sqlSt;
+        String output = "";
+        int result;
+        String name = nameinput.getText();
+        String contact = contactinput.getText();
+        String gender = String.valueOf(genderinput.getSelectedItem());
+        String phone = phoneinput.getText();
+        String sympton = symptomsinput.getText();
+        String occ = occinput.getText();
+        String blood = String.valueOf(groupinput.getSelectedItem());
+        String religion = relinput.getText();
+        String doctor = String.valueOf(consinput.getSelectedItem());
+        double price =Double.parseDouble(priceinput.getText());
+        String date = datePicker.getModel().getMonth()+"/"+ datePicker.getModel().getDay()+"/"+ datePicker.getModel().getYear();
+
+        //function here
+        database db = new database(name, occ, contact, gender, phone,  sympton, blood, religion, doctor, price, date);
+
+        entry.getPatients();
+        updateTable(table);
+ 
+
+    }
+
+    private class filtListener implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            //DO SOMETHING
+            System.exit(0);
+        }
+    }
+
+
 }
+
+

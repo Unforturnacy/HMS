@@ -15,6 +15,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,6 +28,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
+
+import com.mysql.cj.x.protobuf.MysqlxCrud.Collection;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -46,9 +49,12 @@ public class patientEntry{
     private patientEntry login;
     static Point mouseDownCompCoords;
     public ArrayList<admin> admins = new ArrayList<admin>();
+    public ArrayList<patient> patients = new ArrayList<patient>();
+    public ArrayList<patient> revpatients = new ArrayList<patient>();
     public patientEntry()
     {
         getadmins();
+        getPatients();
         login = this;
         final int dimx = 650;
         frame = new JFrame();
@@ -309,7 +315,7 @@ public class patientEntry{
            if(coruse && corpass)
            {
                login.frame.setVisible(false);
-               new receptionist();
+               new receptionist(login);
            }
            else
 
@@ -366,6 +372,62 @@ public class patientEntry{
         catch (SQLException ex){
             System.out.println("SQL IS BAD" +ex.getMessage());
         }
+    }
+
+
+    public void getPatients()
+    {
+        patients = new ArrayList<patient>();
+        revpatients.clear();
+        Statement sqlSt;
+        String output = "";
+        ResultSet result;
+        String SQL = "SELECT * from patients";
+
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            String dbURL = "jdbc:mysql://localhost:3306/hospital";
+            Connection dbConnect =  DriverManager.getConnection(dbURL, "root", "");
+            sqlSt = dbConnect.createStatement();//allows SQL to be executed
+            result = sqlSt.executeQuery(SQL);
+            while(result.next() != false)
+            {
+                 int id = Integer.parseInt(result.getString(1));
+                 String name = result.getString(2);
+                 String occupation=result.getString(3);
+                 String email=result.getString(4);
+                 String gender=result.getString(5);
+                 String tele=result.getString(6);
+                 String symp=result.getString(7);
+                 String blood=result.getString(8);
+                 String add=result.getString(9);
+                 String docseen=result.getString(10);
+                 double paid=  Double.parseDouble(result.getString(11));
+                 String date=result.getString(12);
+
+
+                
+                patients.add(new patient(id, name, occupation, email, gender, tele, symp, blood, add, docseen, paid, date));
+                revpatients.add(new patient(id, name, occupation, email, gender, tele, symp, blood, add, docseen, paid, date));
+            }
+
+            Collections.reverse(revpatients);
+
+            sqlSt.close();
+        }
+        catch(ClassNotFoundException ex){
+            System.out.println("DIDNT LOAD JAR");
+        }
+        catch (SQLException ex){
+            System.out.println("SQL IS BAD" +ex.getMessage());
+        }
+
+        System.out.println("succesful");
+    }
+
+    public int getlastID()
+    {
+         return revpatients.get(0).getid();
     }
 
 

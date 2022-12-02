@@ -48,9 +48,11 @@ public class feedback extends JFrame implements ActionListener{
     JRadioButton four;
     JRadioButton five;
     ButtonGroup rating;
+    private  feedback feed;
 
         
     public feedback(){
+        feed =  this;
         this.setTitle("Client Form");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
@@ -174,36 +176,16 @@ public class feedback extends JFrame implements ActionListener{
                 
             if(flag)
             {
-                String r;
-                if(one.isSelected())
-                    r="One star";
-                else if(two.isSelected())
-                    r="Two stars";
-                else if(three.isSelected())
-                    r="Three stars";    
-                else if(four.isSelected())
-                    r="Four stars";
-                else
-                    r="Five stars";
                 String s1= "Thank you for your valuable Feeedback!\n\nYour Responses:-\n";
-                String s2= "Name: "+tname.getText()+"\nEmail: "+tmail.getText()+"\nAge group: "+(String)agegrp.getSelectedItem()+"\nRating: "+r+"\nFeedback: "+tfeedback.getText();
+                String s2= "Name: "+tname.getText()+"\nEmail: "+tmail.getText()+"\n"+"\nFeedback: "+tfeedback.getText();
                 String disp=s1+s2;
                 JOptionPane.showMessageDialog(f, disp);
+                database db = new database(tname.getText(),tmail.getText(), tfeedback.getText());
+                feed.setVisible(false);
             }
             
         }
 
-        else if( e.getSource()==reset){
-            tname.setText(null);
-            tmail.setText(null);
-            tfeedback.setText(null);
-            agegrp.setSelectedIndex(0);
-            one.setSelected(false); 
-            two.setSelected(false);   
-            three.setSelected(false); 
-            four.setSelected(false); 
-            five.setSelected(true);       
-        }
 
     }
 

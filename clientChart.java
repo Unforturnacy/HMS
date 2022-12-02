@@ -54,10 +54,17 @@ public class clientChart {
     private boolean onmain = true;
     private JPanel chartPanel;
     private JPanel pastap;
+    patientEntry listing;
+    receptionist rec;
+    private int row;
+    JFrame frame;
 
-    public clientChart()
+    public clientChart(patientEntry listing, receptionist rec,int row )
     {
-        JFrame frame = new JFrame();
+        this.listing = listing;
+        this.row = row;
+        this.rec = rec;
+        frame = new JFrame();
         frame.setBounds(400, 100, 950, 645);
         frame.addMouseListener(new MouseListener(){
             public void mouseReleased(MouseEvent e) {
@@ -115,20 +122,29 @@ public class clientChart {
         userIcon1.setBounds(0, 0, 200, 200);
         symp1.add(userIcon1);
 
-
+        JButton xbut = new JButton(new ImageIcon("images\\x.png"));
+        xbut.setBounds(920, 0, 30, 30);
+        xbut.setBackground(new Color(0,0,0,0));
+        xbut.setFont(new Font("Serif", Font.BOLD, 18));
+        xbut.setBorderPainted(false);
+        xbut.setFocusPainted(false);
+        xbut.setForeground(Color.decode("#54aeef"));
+        xbut.setRolloverEnabled(false);
+        info.add(xbut);
+        xbut.addActionListener(new CloseListener());
 
         JPanel symp = new JPanel();
         symp.setLayout(new BorderLayout());
         symp.setBounds(730, 25, 200, 250);
         symp.setBackground(Color.red);
-        info.add(symp);
+     
 
-        JLabel nameLabel  = new JLabel("SIMONS, TERIC");
+        JLabel nameLabel  = new JLabel(listing.patients.get(row).getname().toUpperCase());
         nameLabel.setBounds(345, 35, 1500, 50);
         nameLabel.setFont(new Font("Serif", Font.PLAIN, 30));
         info.add(nameLabel);
-
-        JLabel agegenderLabel  = new JLabel("Male, Age 20");
+        
+        JLabel agegenderLabel  = new JLabel(listing.patients.get(row).getgender().toUpperCase());
         agegenderLabel.setBounds(345, 75, 1500, 50);
         agegenderLabel.setFont(new Font("Serif", Font.BOLD, 15));
         info.add(agegenderLabel);
@@ -138,7 +154,7 @@ public class clientChart {
         doc.setFont(new Font("Serif", Font.BOLD, 15));
         info.add(doc);
 
-        JLabel doc1  = new JLabel("Grant, Matthew MD.");
+        JLabel doc1  = new JLabel("MD, " + listing.patients.get(row).get_docseen().toUpperCase());
         doc1.setBounds(400, 105, 1500, 50);
         doc1.setFont(new Font("Serif", Font.PLAIN, 15));
         info.add(doc1);
@@ -148,17 +164,17 @@ public class clientChart {
         date.setFont(new Font("Serif", Font.BOLD, 15));
         info.add(date);
 
-        JLabel date1  = new JLabel("11/27/2002");
+        JLabel date1  = new JLabel(listing.patients.get(row).get_Date().toUpperCase());
         date1.setBounds(440, 170, 1500, 50);
         date1.setFont(new Font("Serif", Font.PLAIN, 15));
         info.add(date1);
 
-        JLabel dob  = new JLabel("DOB");
+        JLabel dob  = new JLabel("Occupation");
         dob.setBounds(345, 140, 1500, 50);
         dob.setFont(new Font("Serif", Font.BOLD, 15));
         info.add(dob);
 
-        JLabel dob1  = new JLabel("07/12/2002");
+        JLabel dob1  = new JLabel(listing.patients.get(row).getoc().toUpperCase());
         dob1.setBounds(440, 140, 1500, 50);
         dob1.setFont(new Font("Serif", Font.PLAIN, 15));
         info.add(dob1);
@@ -168,7 +184,7 @@ public class clientChart {
         phone.setFont(new Font("Serif", Font.BOLD, 15));
         info.add(phone);
 
-        JLabel phone1  = new JLabel("876-123-4567");
+        JLabel phone1  = new JLabel(listing.patients.get(row).get_tele().toUpperCase());
         phone1.setBounds(640, 140, 1500, 50);
         phone1.setFont(new Font("Serif", Font.PLAIN, 15));
         info.add(phone1);
@@ -200,7 +216,7 @@ public class clientChart {
         String[] coloumnNames = {"Sypmtoms"};
         
 
-        DefaultTableModel model =new DefaultTableModel(coloumnNames, 0) {
+         DefaultTableModel model =new DefaultTableModel(coloumnNames, 0) {
 
             @Override
             public boolean isCellEditable(int row, int column) {       
@@ -230,11 +246,7 @@ public class clientChart {
     
             table.setShowVerticalLines(false);
     
-        for(int i =0;i <10 ; i++)
-        {
-            model.addRow(new String[]{"Cancer"});
-        }
-    
+   
    
        table.setRowHeight(37);
        table.getTableHeader().setFont(new Font("Serif", Font.BOLD, 17));
@@ -260,10 +272,10 @@ public class clientChart {
 
     public void pasapp()
     {
-        String[] coloumnNames = {"Date","Assigned To","Status"};
+        String[] coloumnNames = {"Symptoms"};
         
 
-        DefaultTableModel model = new DefaultTableModel(coloumnNames, 0) {
+       model = new DefaultTableModel(coloumnNames, 0) {
 
             @Override
             public boolean isCellEditable(int row, int column) {       
@@ -293,10 +305,7 @@ public class clientChart {
     
             table.setShowVerticalLines(false);
     
-        for(int i =0;i <10 ; i++)
-        {
-            model.addRow(new String[]{"11/28/2011","Dr. Ranaldo Green", "CANCELLED",});
-        }
+            addToTable(listing.patients.get(row));
     
    
        table.setRowHeight(37);
@@ -308,11 +317,6 @@ public class clientChart {
        scrollPane.setBorder(new LineBorder(Color.decode("#54aeef"), 5));
 
        pastap.add(scrollPane);
-
-
-
-
-
        
     }
 
@@ -343,5 +347,24 @@ public class clientChart {
             g.fillRoundRect(0, yOffset, size.width, size.height + yOffset - 1, 10, 1);
         }
     }
+
+    private void addToTable(patient p)
+    {
+        model.setRowCount(0);
+        String[] item = p.get_sym();
+        model.addRow(item);
+
+    }
+
+    private class CloseListener implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            //DO SOMETHING
+            frame.setVisible(false);
+            
+        }
+    }
+
+
     
 }
